@@ -1,7 +1,22 @@
+import { useState } from "react"
 import "./header.css"
+import { useEffect } from "react";
 const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
   return (
-    <nav>
+    <nav className={isScrolled ? "window-scroll" : ""}>
       <div className="container nav_container">
         <a href="index.html"><h4>TutorZ</h4></a>
         <ul className="nav_menu">
