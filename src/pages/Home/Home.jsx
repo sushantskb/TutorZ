@@ -4,6 +4,8 @@ import { courseData } from "../../data/courses";
 import CoursesCard from "../../components/CoursesCard/CoursesCard";
 import { faqs } from "../../data/faqs";
 import FaqsCard from "../../components/FaqsCard/FaqsCard";
+import Testimonial from "../../components/Testimonial/Testimonial";
+import "swiper/css"
 const Home = () => {
   
   return (
@@ -137,6 +139,15 @@ const Home = () => {
         </div>
       </section>
       {/* =====FAQS Section End===== */}
+
+
+      {/* =====Testimonils==== */}
+      <section className="container testimonial_container mySwiper">
+        <h2>Student&apos;s Testimonial</h2>
+        <Testimonial />
+        <div className="swiper-pagination"></div>
+    </section>
+      {/* =====Testimonils End==== */}
     </div>
   );
 };
