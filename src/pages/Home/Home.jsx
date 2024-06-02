@@ -1,5 +1,7 @@
 import "./home.css";
 import heroImage from "../../assets/hero-bg.jpg";
+import { courseData } from "../../data/courses";
+import CoursesCard from "../../components/CoursesCard/CoursesCard";
 const Home = () => {
   return (
     <div>
@@ -105,6 +107,19 @@ const Home = () => {
         </div>
       </section>
       {/* =====Categorties Section End====== */}
+
+
+      {/* ======Courses Section===== */}
+      <section className="courses">
+      <h2>Courses we offer</h2>
+      <div className="container courses_container">
+        { courseData.slice(0, 3).map((course) => (
+          <CoursesCard key={course.id} title={course.title} image={course.image} description={course.description} />
+        )) }
+        
+      </div>
+    </section>
+      {/* ======Courses End===== */}
     </div>
   );
 };

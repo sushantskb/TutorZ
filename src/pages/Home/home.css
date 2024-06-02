@@ -70,3 +70,38 @@ header {
   font-size: 0.85rem;
 }
 /* ==========Categories Section End========== */
+
+/* =========Courses Section====== */
+.courses {
+  margin-top: 10rem;
+}
+
+.courses_container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.course {
+  background: var(--color-bg1);
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.course:hover {
+  background: transparent;
+  border-color: var(--color-primary);
+}
+
+.course_info {
+  padding: 2rem;
+}
+
+.course_info p {
+  margin: 1.2rem 0 2rem;
+  font-size: 0.9rem;
+}
+.course_info a {
+  margin: auto;
+}
+/* =========Courses Section End====== */
