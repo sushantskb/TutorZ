@@ -24,6 +24,7 @@ const Header = () => {
           <li><Link to="/home">Home</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><Link to="/courses">Courses</Link></li>
+          <li><Link to="/tutors">Tutors</Link></li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
         <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
