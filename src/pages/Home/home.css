@@ -1,3 +1,4 @@
+/* =====Hero Section===== */
 header {
     position: relative;
     top: 5rem;
@@ -16,3 +17,56 @@ header {
   .header_left p {
     margin: 1rem 0 2.4rem;
   }
+  /* =====Hero Section End====== */
+
+/* ==========Categories Section========== */
+.categories {
+  background: var(--color-bg1);
+  height: 29rem;
+}
+
+.categories h1 {
+  line-height: 1;
+  margin-bottom: 3rem;
+}
+
+.categories_container {
+  display: grid;
+  grid-template-columns: 54% 57%;
+}
+
+.categories_left {
+  margin-right: 4rem;
+}
+
+.categories_left p {
+  margin: 1rem 0 3rem;
+}
+
+.categories_right {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: -94px auto;
+}
+
+.category {
+  background: var(--color-bg2);
+  padding: 2rem;
+  border-radius: 2rem;
+  transition: var(--transition);
+}
+
+.category:hover {
+  box-shadow: 0 3rem 3rem rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.category h5 {
+  margin: 2rem 0 1rem;
+}
+
+.category p {
+  font-size: 0.85rem;
+}
+/* ==========Categories Section End========== */
