@@ -197,3 +197,81 @@ header {
   transform: rotate(45deg);
 }
 /* =====Testimonial Section End==== */
+
+@media screen and (max-width: 1024px) {
+  /* ====Hero Section==== */
+  header {
+    height: 52vh;
+    margin-bottom: 4rem;
+  }
+
+  .header_container {
+    gap: 0;
+    padding-bottom: 3rem;
+  }
+
+  /* ====Categories Section===== */
+  .categories {
+    height: auto;
+  }
+
+  .categories_container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .categories_left {
+    margin-right: 0;
+  }
+
+  /* ====Faq Section==== */
+  .faqs_container {
+    grid-template-columns: 1fr;
+  }
+  .faq {
+    padding: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* ====Hero Section==== */
+  header {
+    height: 100vh;
+  }
+
+  .header_container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .header_left p {
+    margin-bottom: 1.3rem;
+  }
+
+  .header_left .btn {
+    margin: auto;
+  }
+
+  /* ====Categories Section==== */
+  .categories_right {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .category {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .category_icon {
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  /* ====Testimonials==== */
+   /* ===Tesimonials=== */
+   .testimonial_body {
+    padding: 1.2rem;
+  }
+}
