@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./studentProfile.css"
+import "./studentProfile.css";
 const StudentProfile = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -11,7 +11,7 @@ const StudentProfile = () => {
     <div className="profile-page">
       <div className="profile-header">
         <img
-          src="https://avatar.iran.liara.run/public/7"
+          src="https://avatar.iran.liara.run/public/49"
           alt="Profile"
           className="profile-image"
         />
@@ -45,9 +45,27 @@ const StudentProfile = () => {
             <div className="assignments-section">
               <h3>Assignments</h3>
               <ul>
-                <li>Assignment 1 - Completed</li>
-                <li>Assignment 2 - In Progress</li>
-                <li>Assignment 3 - Not Started</li>
+                <li>
+                  Assignment 1 - Completed
+                  <div className="assignment-actions">
+                    <button className="upload-btn">Upload</button>
+                    <button className="view-btn">View</button>
+                  </div>
+                </li>
+                <li>
+                  Assignment 2 - In Progress
+                  <div className="assignment-actions">
+                    <button className="upload-btn">Upload</button>
+                    <button className="view-btn">View</button>
+                  </div>
+                </li>
+                <li>
+                  Assignment 3 - Not Started
+                  <div className="assignment-actions">
+                    <button className="upload-btn">Upload</button>
+                    <button className="view-btn">View</button>
+                  </div>
+                </li>
                 {/* Add more assignments here */}
               </ul>
             </div>

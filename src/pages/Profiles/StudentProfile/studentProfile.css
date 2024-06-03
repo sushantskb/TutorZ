@@ -79,6 +79,29 @@
     padding: 0.8rem;
     border-radius: 5px;
     margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .assignment-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .upload-btn,
+  .view-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: var(--color-danger);
+    color: var(--color-white);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .upload-btn:hover,
+  .view-btn:hover {
+    background: var(--color-danger-varient);
   }
   
   .logout-btn {
