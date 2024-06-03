@@ -37,7 +37,7 @@ const Home = () => {
       {/* =====Categorties Section====== */}
       <section className="categories">
         <div className="container categories_container">
-          <div className="category_left">
+          <div className="categories_left">
             <h1>Categories</h1>
             <p>
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam

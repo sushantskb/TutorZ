@@ -82,24 +82,24 @@ img {
 }
 
 .btn {
-  display: block;
-  background: var(--color-white);
-  padding: 1rem 2rem;
-  border: 1px solid transparent;
-  font-weight: 500;
-  transition: var(--transition);
-  width: 160px;
+  display: block !important;
+  background: var(--color-white) !important;
+  padding: 1rem 2rem !important;
+  border: 1px solid transparent !important;
+  font-weight: 500 !important;
+  transition: var(--transition) !important;
+  width: 160px !important;
 }
 
 .btn:hover {
-  background: transparent;
-  color: var(--color-white);
-  border-color: var(--color-white);
+  background: transparent !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-white) !important;
 }
 
 .btn-primary {
-  background: var(--color-danger);
-  color: var(--color-white);
+  background: var(--color-danger) !important;
+  color: var(--color-white) !important;
 }
 
 /* ====Media Query===== */

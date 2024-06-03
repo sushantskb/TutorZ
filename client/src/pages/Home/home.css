@@ -262,6 +262,10 @@ header {
   }
 
   /* ====Categories Section==== */
+
+  .categories_left{
+    margin-bottom: 71px;
+  }
   .categories_right {
     grid-template-columns: 1fr 1fr;
     gap: 0.7rem;
