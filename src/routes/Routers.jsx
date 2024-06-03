@@ -6,6 +6,7 @@ import StudentProfile from "../pages/Profiles/StudentProfile/StudentProfile"
 import TutorProfile from "../pages/Profiles/TutorProfile/TutorProfile"
 import Courses from "../pages/Courses/Courses"
 import Tutor from "../pages/Tutor/Tutor"
+import Login from "../pages/Login/Login"
 
 const Routers = () => {
   return (
@@ -17,6 +18,7 @@ const Routers = () => {
       <Route path="/tutor/:id" element={<Tutor />} />
       <Route path="/student" element={<StudentProfile />} />
       <Route path="/tutor" element={<TutorProfile />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/*" element={<NotFound_404 />} />
     </Routes>
   )
