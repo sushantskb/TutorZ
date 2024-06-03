@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import "./tutorProfile.css"
+import { useState } from "react";
+import "./tutorProfile.css";
 const TutorProfile = () => {
-    const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
-    const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -30,27 +30,27 @@ const TutorProfile = () => {
         />
         <div className="profile-tabs">
           <button
-            className={activeTab === 'overview' ? 'active' : ''}
-            onClick={() => handleTabChange('overview')}
+            className={activeTab === "overview" ? "active" : ""}
+            onClick={() => handleTabChange("overview")}
           >
             Overview
           </button>
           <button
-            className={activeTab === 'create-assignment' ? 'active' : ''}
-            onClick={() => handleTabChange('create-assignment')}
+            className={activeTab === "create-assignment" ? "active" : ""}
+            onClick={() => handleTabChange("create-assignment")}
           >
             Create Assignment
           </button>
           <button
-            className={activeTab === 'update' ? 'active' : ''}
-            onClick={() => handleTabChange('update')}
+            className={activeTab === "update" ? "active" : ""}
+            onClick={() => handleTabChange("update")}
           >
             Update
           </button>
         </div>
       </div>
       <div className="profile-content">
-        {activeTab === 'overview' ? (
+        {activeTab === "overview" ? (
           <div className="overview">
             <div className="students-section">
               <h3>Assigned Students</h3>
@@ -71,7 +71,7 @@ const TutorProfile = () => {
               </ul>
             </div>
           </div>
-        ) : activeTab === 'create-assignment' ? (
+        ) : activeTab === "create-assignment" ? (
           <div className="create-assignment">
             <h3>Create Assignment</h3>
             <form className="create-assignment-form">
@@ -87,6 +87,20 @@ const TutorProfile = () => {
                   <option value="completed">Completed</option>
                 </select>
               </div>
+
+              <div className="form-group">
+                <label htmlFor="assignmentFile" className="file-upload-label">
+                  <span className="file-upload-icon">📁</span>
+                  Upload Assignment
+                </label>
+                <input
+                  type="file"
+                  id="assignmentFile"
+                  name="assignmentFile"
+                  className="custom-file-upload"
+                />
+              </div>
+
               <div className="form-group">
                 <label htmlFor="student">Student</label>
                 <select id="student" name="student">
@@ -96,24 +110,41 @@ const TutorProfile = () => {
                   {/* Add more students here */}
                 </select>
               </div>
-              <button type="submit" className="create-assignment-btn">Create</button>
+              <button type="submit" className="create-assignment-btn">
+                Create
+              </button>
             </form>
             <div className="assignments-list">
               <h3>Assignments</h3>
               <ul>
                 <li>
                   John Doe - Assignment 1
-                  <button className="update-status-btn" onClick={() => handleUpdateStatusClick('Assignment 1')}>Update Status</button>
+                  <button
+                    className="update-status-btn"
+                    onClick={() => handleUpdateStatusClick("Assignment 1")}
+                  >
+                    Update Status
+                  </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Jane Smith - Assignment 2
-                  <button className="update-status-btn" onClick={() => handleUpdateStatusClick('Assignment 2')}>Update Status</button>
+                  <button
+                    className="update-status-btn"
+                    onClick={() => handleUpdateStatusClick("Assignment 2")}
+                  >
+                    Update Status
+                  </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Bob Johnson - Assignment 3
-                  <button className="update-status-btn" onClick={() => handleUpdateStatusClick('Assignment 3')}>Update Status</button>
+                  <button
+                    className="update-status-btn"
+                    onClick={() => handleUpdateStatusClick("Assignment 3")}
+                  >
+                    Update Status
+                  </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 {/* Add more assignments here */}
@@ -143,15 +174,27 @@ const TutorProfile = () => {
               <div className="form-group">
                 <label htmlFor="slots">Slots</label>
                 <div className="slots-inputs">
-                  <input type="text" id="timings" name="timings" placeholder="Timings" />
-                  <input type="number" id="days" name="days" placeholder="No. of Days" />
+                  <input
+                    type="text"
+                    id="timings"
+                    name="timings"
+                    placeholder="Timings"
+                  />
+                  <input
+                    type="number"
+                    id="days"
+                    name="days"
+                    placeholder="No. of Days"
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="profile-image">Profile Image</label>
                 <input type="file" id="profile-image" name="profile-image" />
               </div>
-              <button type="submit" className="update-btn">Update</button>
+              <button type="submit" className="update-btn">
+                Update
+              </button>
             </form>
           </div>
         )}
@@ -168,6 +211,6 @@ const TutorProfile = () => {
       )}
     </div>
   );
-}
+};
 
-export default TutorProfile
+export default TutorProfile;
