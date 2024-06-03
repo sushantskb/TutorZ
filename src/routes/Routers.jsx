@@ -8,6 +8,7 @@ import Courses from "../pages/Courses/Courses"
 import Tutor from "../pages/Tutor/Tutor"
 import Login from "../pages/Login/Login"
 import SignUp from "../pages/SignUp/SignUp"
+import ContactUs from "../pages/Contact/ContactUs"
 
 const Routers = () => {
   return (
@@ -16,6 +17,7 @@ const Routers = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/tutors" element={<Tutors />} />
+      <Route path="/contact" element=<ContactUs /> />
       <Route path="/tutor/:id" element={<Tutor />} />
       <Route path="/student" element={<StudentProfile />} />
       <Route path="/tutor" element={<TutorProfile />} />
