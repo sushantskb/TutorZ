@@ -3,18 +3,18 @@ import "./signup.css";
 import SignUp_Img from "../../assets/signup.png";
 import { Link } from "react-router-dom";
 const SignUp = () => {
-    const [role, setRole] = useState('');
+  const [role, setRole] = useState('');
 
-    const handleRoleChange = (e) => {
-      setRole(e.target.value);
-    };
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
+  };
   
     return (
       <div className="signup-page">
         <div className="signup-illustration">
           <img src={SignUp_Img} alt="Illustration" />
         </div>
-        <div className="signup-form">
+        <div className="signup-form" >
           <h2>Sign Up</h2>
           <form>
             <div className="form-group half-width">
