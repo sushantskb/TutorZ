@@ -5,6 +5,7 @@ import NotFound_404 from "../pages/NotFound/NotFound_404"
 import StudentProfile from "../pages/Profiles/StudentProfile/StudentProfile"
 import TutorProfile from "../pages/Profiles/TutorProfile/TutorProfile"
 import Courses from "../pages/Courses/Courses"
+import Tutor from "../pages/Tutor/Tutor"
 
 const Routers = () => {
   return (
@@ -13,6 +14,7 @@ const Routers = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/tutors" element={<Tutors />} />
+      <Route path="/tutor/:id" element={<Tutor />} />
       <Route path="/student" element={<StudentProfile />} />
       <Route path="/tutor" element={<TutorProfile />} />
       <Route path="/*" element={<NotFound_404 />} />
