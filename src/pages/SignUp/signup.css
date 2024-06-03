@@ -1,0 +1,116 @@
+.signup-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 2rem;
+  }
+  
+  .signup-illustration {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signup-illustration img {
+    max-width: 50%;
+    height: auto;
+  }
+  
+  .signup-form {
+    flex: 1;
+    background: var(--color-bg1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+  }
+  
+  .signup-form h2 {
+    color: var(--color-danger);
+  }
+  
+  .signup-form .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .signup-form .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .signup-form .form-group input[type="text"],
+  .signup-form .form-group input[type="email"],
+  .signup-form .form-group input[type="number"],
+  .signup-form .form-group input[type="file"],
+  .signup-form .form-group input[type="tel"],
+  .signup-form .form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--color-bg2);
+    border-radius: 5px;
+    background: var(--color-bg1);
+    color: var(--color-white);
+  }
+  
+  .signup-form .form-group.half-width {
+    display: inline-block;
+    width: 48%;
+    margin-right: 2%;
+  }
+  
+  .signup-form .form-group.half-width:last-child {
+    margin-right: 0;
+  }
+  
+  .signup-form .form-group.full-width {
+    width: 100%;
+  }
+  
+  .signup-form .radio-group {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .signup-form .btn {
+    display: block;
+    background: var(--color-danger);
+    padding: 1rem 2rem;
+    border: 1px solid transparent;
+    font-weight: 500;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    color: var(--color-white);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .signup-form .btn:hover {
+    background: var(--color-danger-varient);
+  }
+  
+  .signup-form .expand-btn {
+    margin-bottom: 1rem;
+  }
+  
+  /* Media Queries */
+  @media screen and (max-width: 768px) {
+    .signup-page {
+      flex-direction: column;
+    }
+  
+    .signup-illustration {
+      display: none;
+    }
+  
+    .signup-form {
+      width: 100%;
+    }
+  
+    .signup-form .form-group.half-width {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
