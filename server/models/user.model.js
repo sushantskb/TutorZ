@@ -28,7 +28,6 @@ const UserSchema = new mongoose.Schema({
   timeSlots: String, // For tutors
   classesPerWeek: Number, // For tutor
   fees: Number, // For tutor
-  fees: Number, // For tutors
   profileImage: String,
 });
 
