@@ -39,7 +39,7 @@ exports.signup = async (req, res) => {
 
     return res
       .status(201)
-      .json({ token, userId: user._id, ...userWithoutPassword });
+      .json({ message: "User created",token, userId: user._id, ...userWithoutPassword });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong", error });
   }
@@ -76,7 +76,7 @@ exports.login = async (req, res) => {
 
     return res
       .status(200)
-      .json({ token, userId: user._id, ...userWithoutPassword });
+      .json({ message: "Logged In" ,token, userId: user._id, ...userWithoutPassword });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ message: "Something went wrong" });
