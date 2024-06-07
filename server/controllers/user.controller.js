@@ -16,7 +16,7 @@ exports.getUsers = async (req, res) => {
     } else {
       return res.status(403).json({ message: "Access denied" }); // typo here
     }
-    
+
     return res.status(200).json(users);
   } catch (error) {
     console.log("Error fetching the users: ", error);
@@ -25,28 +25,28 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-  const { name, email, password, role, age, phone, profileImage, ...rest } = req.body;
-
+  const { name, email, password, role, age, phone, profileImage, ...rest } =
+    req.body;
 
   const userId = req.user._id;
 
   try {
     const user = await User.findById(userId);
 
-    if(!user){
-      return res.status(404).json({message: "User not found"})
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Update user fields
     if (name) user.name = name;
     if (email) user.email = email;
-    if(password) {
+    if (password) {
       const hashedPassword = await bcrypt.hash(password, 12);
-      user.password = hashedPassword
+      user.password = hashedPassword;
     }
-    if(age) user.age = age;
-    if(phone) user.phone = phone;
-    if(profileImage) user.profileImage = profileImage
+    if (age) user.age = age;
+    if (phone) user.phone = phone;
+    if (profileImage) user.profileImage = profileImage;
 
     // Update any additional fields
     Object.assign(user, rest);
@@ -54,12 +54,12 @@ exports.updateProfile = async (req, res) => {
     await user.save();
 
     const { password: _, ...updatedUser } = user._doc;
-    res.status(200).json({message: "User updated", updatedUser})
+    return res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
     console.log(error);
-    res.status(500).json({message: "Something went wrong"})
+    return res.status(500).json({ message: "Something went wrong" });
   }
-}
+};
 
 exports.deleteProfile = async (req, res) => {
   const userId = req.user._id;
@@ -67,11 +67,11 @@ exports.deleteProfile = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(userId);
 
-    if(!user){
-      return res.status(404).json({ message: "User not found" })
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({message: "User Deleted"})
+    return res.status(200).json({ message: "User Deleted" });
   } catch (error) {
-    res.status(500).json({message: "Something went wrong", error})
+    return res.status(500).json({ message: "Something went wrong", error });
   }
-}
+};

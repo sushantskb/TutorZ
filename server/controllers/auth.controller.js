@@ -37,9 +37,12 @@ exports.signup = async (req, res) => {
 
     const { password: _, ...userWithoutPassword } = user._doc;
 
-    return res
-      .status(201)
-      .json({ message: "User created",token, userId: user._id, ...userWithoutPassword });
+    return res.status(201).json({
+      message: "User created",
+      token,
+      userId: user._id,
+      ...userWithoutPassword,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong", error });
   }
@@ -74,9 +77,12 @@ exports.login = async (req, res) => {
 
     const { password: _, ...userWithoutPassword } = user._doc; // Exclude password from user document
 
-    return res
-      .status(200)
-      .json({ message: "Logged In" ,token, userId: user._id, ...userWithoutPassword });
+    return res.status(200).json({
+      message: "Logged In",
+      token,
+      userId: user._id,
+      ...userWithoutPassword,
+    });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ message: "Something went wrong" });

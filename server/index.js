@@ -4,6 +4,7 @@ const colors = require("colors");
 const { connDB } = require("./config/db.config");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
+const reviewRoutes = require("./routes/review.routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -17,6 +18,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 connDB();
 app.listen(PORT, () => {
