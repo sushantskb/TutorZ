@@ -60,3 +60,18 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({message: "Something went wrong"})
   }
 }
+
+exports.deleteProfile = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findByIdAndDelete(userId);
+
+    if(!user){
+      return res.status(404).json({ message: "User not found" })
+    }
+    res.status(200).json({message: "User Deleted"})
+  } catch (error) {
+    res.status(500).json({message: "Something went wrong", error})
+  }
+}
