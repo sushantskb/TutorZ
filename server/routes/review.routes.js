@@ -12,24 +12,24 @@ const {
 } = require("../controllers/review.controller");
 
 // Create a Review
-router.post("/:id", authenticate, createReview); // this is teacher id
+router.post("/createReview/:id", authenticate, createReview); // this is teacher id
 
 // Fetch all reviews of a teacher
-router.get("/teacher/:id", authenticate, getAllReviews);
+router.get("/allReviews/:id", authenticate, getAllReviews);
 
 // Fetch a particular review
-router.get("/:id", authenticate, getReviewById); // this is review id
+router.get("/review/:id", authenticate, getReviewById); // this is review id
 
 // Update a Review
-router.put("/:id", authenticate, updateReview); // this is review id
+router.put("/updateReview/:id", authenticate, updateReview); // this is review id
 
 // Delete a review
-router.delete("/:id", authenticate, deleteReview);
+router.delete("/deleteReview:id", authenticate, deleteReview);
 
 // Like a review
-router.post("/:id/like", authenticate, likeReview);
+router.post("/like/:id", authenticate, likeReview); // should follow this convention
 
 // Reply to review
-router.post("/:id/reply", authenticate, replyToReview);
+router.post("/reply/:id", authenticate, replyToReview); // should follow this convention
 
 module.exports = router;

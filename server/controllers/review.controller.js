@@ -3,8 +3,12 @@ const Review = require("../models/review.model");
 // Create a Review
 exports.createReview = async (req, res) => {
   try {
-    const studentId = req.user.userId;
+    const studentId = req.user._id; // here it will be user._id..because in mongoose we identify the id through _id
     const teacherId = req.params.id;
+
+    // log to check the studentId
+    // console.log("studentId: ", studentId);
+
     const { title, content, rating } = req.body;
     const review = new Review({
       title,

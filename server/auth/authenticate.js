@@ -23,7 +23,7 @@ const authenticate = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ message: "Invalid token" });
     }
-    // console.log(req.user);
+    console.log(req.user);
     next();
   } catch (error) {
     console.log("Error during authentication: ", error);
