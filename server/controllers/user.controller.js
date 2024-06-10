@@ -75,3 +75,101 @@ exports.deleteProfile = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };
+
+// Functionalities
+exports.addTutor = async (req, res) => {
+  try {
+    console.log(req.user);
+    const studentId = req.user._id; //logged in user
+    const tutorId = req.params.id;
+
+    // check if the logged-in user is a student
+    if (req.user.role !== "student") {
+      return res.status(403).json({ message: "Only students can add tutors" });
+    }
+
+    // Find the tutor
+    const tutor = await User.findById(tutorId);
+    if (!tutor || tutor.role !== "tutor") {
+      return res.status(404).json({ message: "Tutuor not found" });
+    }
+
+    // Add the tutor to the student's list and the student to the tutor's list
+    const student = await User.findById(studentId);
+
+    if (student.tutors.includes(tutorId)) {
+      return res.status(400).json({ message: "Tutor already added" });
+    }
+
+    student.tutors.push(tutorId);
+    tutor.students.push(studentId);
+
+    await student.save();
+    await tutor.save();
+
+    return res
+      .status(200)
+      .json({ message: "Tutor added successfully", tutors: student.tutors });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+// Remove a tutor
+exports.removeTutor = async (req, res) => {
+  try {
+    const userId = req.user._id; // logged in user
+    const targetId = req.params.id; // ID of tutor/student to be removed
+
+    // Find the student and tutor
+    const user = await User.findById(userId);
+    const targetUser = await User.findById(targetId);
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Logic for students to remove a tutor
+    if (user.role === "student" && targetUser.role === "tutor") {
+      const tutorIndex = user.tutors.indexOf(targetId);
+      const studentIndex = targetUser.students.indexOf(userId);
+
+      if (tutorIndex === -1 || studentIndex === -1) {
+        return res.status(404).json({
+          message:
+            "Tutor not found in student's list or Student not found in tutor's list",
+        });
+      }
+
+      user.tutors.splice(tutorIndex, 1);
+      targetUser.students.splice(studentIndex, 1);
+      // Logic for tutors to remove a student
+    } else if (user.role === "tutor" && targetUser.role === "student") {
+      const studentIndex = user.students.indexOf(targetId);
+      const tutorIndex = targetUser.tutors.indexOf(userId);
+
+      if (studentIndex === -1 || tutorIndex === -1) {
+        return res
+          .status(404)
+          .json({
+            message:
+              "Student not found in tutor's list or tutor not found in student's list",
+          });
+      }
+
+      user.students.splice(studentIndex, 1);
+      targetUser.tutors.splice(tutorIndex, 1);
+
+    } else {
+      return res.status(400).json({ message: "Invalid role combination" })
+    }
+    await user.save();
+    await targetUser.save();
+
+    return res.status(200).json({ message: "Successfully removed", targetId });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong", error });
+  }
+};
