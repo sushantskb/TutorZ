@@ -114,7 +114,7 @@ exports.deleteReview = async (req, res) => {
 exports.likeReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
-    // const userId = req.user.userId;
+    const userId = req.user._id;
 
     const review = await Review.findById(reviewId);
     if (!review) {
@@ -122,9 +122,15 @@ exports.likeReview = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Review not Found" });
     }
-    review.likesCount += 1;
-    review.save();
-    return res.status(201).json({ success: true, review });
+
+    if (review.likes.includes(userId)) {
+      return res.status(200).json({ sucess: true, likesCount });
+    }
+
+    review.likes.push({ userId });
+
+    review.likesCount = review.likes.length;
+    return res.status(200).json({ sucess: true, likesCount });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, error: error.message });

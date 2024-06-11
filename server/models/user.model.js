@@ -20,7 +20,10 @@ const UserSchema = new mongoose.Schema(
       enum: ["student", "tutor"],
       required: true,
     },
-    age: Number,
+    age: {
+      type: Number,
+      required: true,
+    },
     phone: String,
     class: String, // For Student
     subject: String, // For tutors
@@ -40,6 +43,18 @@ const UserSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+      },
+    ],
+    bookedSlots: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Slot",
+      },
+    ],
+    booking: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Booking",
       },
     ],
   },
