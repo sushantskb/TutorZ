@@ -8,12 +8,12 @@ const {
 } = require("../controllers/booking.controller");
 
 // Create a Booking
-router.post("/bookings/:id", authenticate, createBooking);
+router.post("/create-booking/:id", authenticate, createBooking);
 
 // Get bookings by student
-router.get("/bookings/student/:id", authenticate, getBookingsByStudent);
+router.get("/student/:id", authenticate, getBookingsByStudent);
 
 // Cancel a booking
-router.put("/bookings/cancel/:id", authenticate, cancelBooking);
+router.put("/cancel-booking/:id", authenticate, cancelBooking);
 
 module.exports = router;

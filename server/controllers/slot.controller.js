@@ -26,6 +26,7 @@ exports.createSlot = async (req, res) => {
 exports.getSlot = async (req, res) => {
   try {
     const teacherId = req.user._id;
+    console.log(teacherId);
     let date = req.query.date ? new Date(req.query.date) : new Date();
     date.setHours(0, 0, 0, 0);
 

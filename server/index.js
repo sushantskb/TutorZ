@@ -5,8 +5,8 @@ const { connDB } = require("./config/db.config");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const reviewRoutes = require("./routes/review.routes");
-const slotRoutes = require("./routes/slot.route");
-const bookingRoutes = require("./routes/booking.route");
+const slotRoutes = require("./routes/slot.routes");
+const bookingRoutes = require("./routes/booking.routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
