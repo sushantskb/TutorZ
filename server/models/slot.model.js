@@ -12,11 +12,11 @@ const slotSchema = new mongoose.Schema(
       required: true,
     },
     startTime: {
-      type: String,
+      type: Date,
       required: true,
     },
     endTime: {
-      type: String,
+      type: Date,
       required: true,
     },
     duration: {
@@ -27,11 +27,6 @@ const slotSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // courseId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Course",
-    //   required: true,
-    // },
     isBooked: {
       type: Boolean,
       default: false,
