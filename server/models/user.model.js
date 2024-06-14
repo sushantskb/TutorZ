@@ -45,6 +45,12 @@ const UserSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    pendingRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ],
     bookedSlots: [
       {
         type: mongoose.Schema.Types.ObjectId,
