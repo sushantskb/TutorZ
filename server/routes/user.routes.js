@@ -7,7 +7,6 @@ const {
   deleteProfile,
   addTutor,
   removeTutor,
-  approveTutorRequest,
 } = require("../controllers/user.controller");
 
 
@@ -18,7 +17,6 @@ router.delete("/profile/me", authenticate, deleteProfile);
 
 // Functionalities
 router.post("/add-tutor/:id",authenticate, addTutor), // tutor id
-router.post("/approve-tutor/:id", authenticate, approveTutorRequest); // student id
 router.delete("/remove-tutor/:id",authenticate, removeTutor); // target id (student or tutor)
 
 module.exports = router;

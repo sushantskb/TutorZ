@@ -32,7 +32,10 @@ const UserSchema = new mongoose.Schema(
     timeSlots: String, // For tutors
     classesPerWeek: Number, // For tutor
     fees: Number, // For tutor
-    profileImage: String,
+    profileImage: {
+      type: String,
+      default: "https://avatar.iran.liara.run/public/7"
+    },
     tutors: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -44,12 +47,6 @@ const UserSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-    ],
-    pendingRequests: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      }
     ],
     bookedSlots: [
       {
