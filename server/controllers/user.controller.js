@@ -94,49 +94,12 @@ exports.addTutor = async (req, res) => {
       return res.status(404).json({ message: "Tutuor not found" });
     }
 
-    // Add the student to the tutor's pending requests
-    if(tutor.pendingRequests.includes(studentId)) {
-      return res.status(400).json({ message: "Request already sent" })
-    }
-
-    tutor.pendingRequests.push(studentId);
-
-    await tutor.save();
-
-    return res.status(200).json({ message: "Request sent successfully" });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-// Approve a tutor request
-exports.approveTutorRequest = async (req, res) => {
-  try {
-    const tutorId = req.user._id;
-    const studentId = req.params.id;
-
-    // Check if the logged in user is a tutor
-    if(req.user.role !== "tutor"){
-      return res.status(403).json({ message: "Only tutors can approve requests" })
-    }
-
-    // Find the student
+    // Add the tutor to the student's list and the student to the tutor's list
     const student = await User.findById(studentId);
-    if(!student || student.role !== "student"){
-      return res.status(404).json({message: "Student not found"});
+
+    if (student.tutors.includes(tutorId)) {
+      return res.status(400).json({ message: "Tutor already added" });
     }
-
-    // Find the tutor
-    const tutor = await User.findById(tutorId);
-
-    // Check if the request exits
-    if(!tutor.pendingRequests.includes(studentId)) {
-      return res.status(404).json({ message: "Request not found" })
-    }
-
-    tutor.pendingRequests = tutor.pendingRequests.filter(id => id.toString() !== studentId.toString());
 
     student.tutors.push(tutorId);
     tutor.students.push(studentId);
@@ -144,12 +107,14 @@ exports.approveTutorRequest = async (req, res) => {
     await student.save();
     await tutor.save();
 
-    return res.status(200).json({ message: "Tutor request approved successfully", tutors: student.tutors})
+    return res
+      .status(200)
+      .json({ message: "Tutor added successfully", tutors: student.tutors });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" })
+    return res.status(500).json({ message: "Something went wrong" });
   }
-}
+};
 
 // Remove a tutor
 exports.removeTutor = async (req, res) => {
