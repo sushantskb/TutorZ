@@ -1,6 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import axios from "axios";
+
 const API_URL = "http://localhost:8000";
+
+// thunk for login
+export const login = createAsyncThunk(
+  "auth/login",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/auth/login`, userData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Login failed"
+      );
+    }
+  }
+);
+
+// thunk for signup
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (userData, thunkAPI) => {
+    try {
+      const resposne = await axios.post(`${API_URL}/api/auth/signup`, userData);
+      return resposne.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Registration failed"
+      );
+    }
+  }
+);
 
 const initialState = {
   user: null,
@@ -13,49 +45,46 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    startLoading(state) {
-      state.isLoading = true;
+    clearError(state) {
       state.error = null;
     },
-    setUser(state, action) {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isLoading = false;
-    },
-    setError(state, action) {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isLoading = false;
-    },
+
     logout(state) {
       state.user = null;
       state.token = null;
       state.error = null;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(signup.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(signup.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { startLoading, setUser, setError, logout } = authSlice.actions;
-
+export const { clearError, logout } = authSlice.actions;
 export default authSlice.reducer;
-
-// signup
-export const signup = (userData) => async (dispatch) => {
-  dispatch(startLoading());
-  try {
-    const response = await axios.post(`${API_URL}/api/auth/signup`, userData);
-    dispatch(setUser(response.data));
-  } catch (error) {
-    dispatch(setError(error.response.data.message));
-  }
-};
-
-export const login = (userData) => async (dispatch) => {
-  dispatch(startLoading());
-  try {
-    const response = await axios.post(`{API_URL}/api/auth/login`, userData);
-    dispatch(setUser(response.data));
-  } catch (error) {
-    dispatch(setError(error.response.data.message));
-  }
-};
