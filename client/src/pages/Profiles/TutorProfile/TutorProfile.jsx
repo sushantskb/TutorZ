@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../components/Context/AuthContext"
 import "./tutorProfile.css";
 const TutorProfile = () => {
+  const { logout } = useContext(AuthContext)
   const [activeTab, setActiveTab] = useState("overview");
 
   const [selectedAssignment, setSelectedAssignment] = useState(null);
@@ -70,6 +72,7 @@ const TutorProfile = () => {
                 {/* Add more students here */}
               </ul>
             </div>
+            <button className="btn" onClick={logout}>Logout</button>
           </div>
         ) : activeTab === "create-assignment" ? (
           <div className="create-assignment">

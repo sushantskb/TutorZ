@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const colors = require("colors");
 const { connDB } = require("./config/db.config");
+const cors = require("cors");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const reviewRoutes = require("./routes/review.routes");
@@ -16,6 +17,9 @@ app.get("/", (req, res) => {
 
 // Middlewares
 app.use(express.json());
+app.use(cors({
+  uri: "http://localhost:5173"
+}))
 
 // Routes
 app.use("/api/auth", authRoutes);

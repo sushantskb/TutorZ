@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../components/Context/AuthContext"
 import "./studentProfile.css";
 const StudentProfile = () => {
+
+  const { logout } = useContext(AuthContext)
+
   const [activeTab, setActiveTab] = useState("overview");
 
   const handleTabChange = (tab) => {
@@ -69,7 +73,7 @@ const StudentProfile = () => {
                 {/* Add more assignments here */}
               </ul>
             </div>
-            <button className="logout-btn">Logout</button>
+            <button className="logout-btn" onClick={logout}>Logout</button>
           </div>
         ) : (
           <div className="update-form">

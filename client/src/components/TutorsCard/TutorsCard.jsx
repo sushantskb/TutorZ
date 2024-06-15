@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 
+import { Link } from "react-router-dom"
+
 const TutorsCard = ({image, name, subject}) => {
   return (
     <article className="tutor">
@@ -9,7 +11,7 @@ const TutorsCard = ({image, name, subject}) => {
       <div className="tutor_info">
         <h4>{name}</h4>
         <small>{subject}</small>
-        <button className="explore_btn">Explore More</button>
+        <Link to="/tutor/1"><button className="explore_btn">Explore More</button></Link>
       </div>
     </article>
   )

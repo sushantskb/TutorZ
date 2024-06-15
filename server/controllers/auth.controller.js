@@ -88,3 +88,12 @@ exports.login = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+exports.verifyToken = async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json({ user });
+  } catch(error){
+    res.status(500).json({ message: "Failed to verify token", error });
+  }
+}
