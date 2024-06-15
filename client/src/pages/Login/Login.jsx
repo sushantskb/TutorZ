@@ -3,7 +3,7 @@ import "./login.css";
 import illustration from "../../assets/loginPage.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login, clearError } from "../../hooks/slices/authSlice";
 import { toast } from "react-toastify";
 
@@ -14,13 +14,13 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const { user, isLoading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  console.log(user);
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
-
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,18 +32,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = await dispatch(login(formData));
-    if (login.fulfilled.match(resultAction)) {
-      toast.success("Login Success!", {
+    try {
+      await dispatch(login(formData));
+    } catch (error) {
+      console.log("Login error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      toast.success("Login Success", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
       navigate("/");
-    } else if (login.rejected.match(resultAction)) {
-      toast.error(resultAction.payload || "Login failed. Please try again.", {
-        style: { background: "rgba(247, 88, 66, 0.4)", color: "white" },
-      });
     }
-  };
+  }, [user, navigate]);
 
   return (
     <div className="login-page">
