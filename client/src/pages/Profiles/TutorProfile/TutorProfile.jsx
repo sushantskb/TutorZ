@@ -1,25 +1,13 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "../../../components/Context/AuthContext"
+import { AuthContext } from "../../../components/Context/AuthContext";
 import "./tutorProfile.css";
-const TutorProfile = () => {
-  const { logout } = useContext(AuthContext)
-  const [activeTab, setActiveTab] = useState("overview");
 
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
+const TutorProfile = () => {
+  const { logout } = useContext(AuthContext);
+  const [activeTab, setActiveTab] = useState("overview");
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-  };
-
-  const handleUpdateStatusClick = (assignment) => {
-    setSelectedAssignment(assignment);
-  };
-
-  const handleStatusUpdate = (status) => {
-    // Handle status update logic here
-    console.log(`Updating status of ${selectedAssignment} to ${status}`);
-    // Clear selected assignment after status update
-    setSelectedAssignment(null);
   };
 
   return (
@@ -49,10 +37,16 @@ const TutorProfile = () => {
           >
             Update
           </button>
+          <button
+            className={activeTab === "requests" ? "active" : ""}
+            onClick={() => handleTabChange("requests")}
+          >
+            Requests
+          </button>
         </div>
       </div>
       <div className="profile-content">
-        {activeTab === "overview" ? (
+        {activeTab === "overview" && (
           <div className="overview">
             <div className="students-section">
               <h3>Assigned Students</h3>
@@ -69,12 +63,12 @@ const TutorProfile = () => {
                   Bob Johnson - 1:00 PM - 2:00 PM
                   <button className="send-email-btn">Send Email</button>
                 </li>
-                {/* Add more students here */}
               </ul>
             </div>
             <button className="btn" onClick={logout}>Logout</button>
           </div>
-        ) : activeTab === "create-assignment" ? (
+        )}
+        {activeTab === "create-assignment" && (
           <div className="create-assignment">
             <h3>Create Assignment</h3>
             <form className="create-assignment-form">
@@ -110,7 +104,6 @@ const TutorProfile = () => {
                   <option value="john-doe">John Doe</option>
                   <option value="jane-smith">Jane Smith</option>
                   <option value="bob-johnson">Bob Johnson</option>
-                  {/* Add more students here */}
                 </select>
               </div>
               <button type="submit" className="create-assignment-btn">
@@ -122,39 +115,30 @@ const TutorProfile = () => {
               <ul>
                 <li>
                   John Doe - Assignment 1
-                  <button
-                    className="update-status-btn"
-                    onClick={() => handleUpdateStatusClick("Assignment 1")}
-                  >
+                  <button className="update-status-btn">
                     Update Status
                   </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Jane Smith - Assignment 2
-                  <button
-                    className="update-status-btn"
-                    onClick={() => handleUpdateStatusClick("Assignment 2")}
-                  >
+                  <button className="update-status-btn">
                     Update Status
                   </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Bob Johnson - Assignment 3
-                  <button
-                    className="update-status-btn"
-                    onClick={() => handleUpdateStatusClick("Assignment 3")}
-                  >
+                  <button className="update-status-btn">
                     Update Status
                   </button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
-                {/* Add more assignments here */}
               </ul>
             </div>
           </div>
-        ) : (
+        )}
+        {activeTab === "update" && (
           <div className="update-form">
             <h3>Update Profile</h3>
             <form>
@@ -201,17 +185,29 @@ const TutorProfile = () => {
             </form>
           </div>
         )}
+        {activeTab === "requests" && (
+          <div className="requests">
+            <h3>Student Requests</h3>
+            <ul>
+              <li>
+                Alice Johnson
+                <button className="accept-btn">Accept</button>
+                <button className="decline-btn">Decline</button>
+              </li>
+              <li>
+                Michael Brown
+                <button className="accept-btn">Accept</button>
+                <button className="decline-btn">Decline</button>
+              </li>
+              <li>
+                Emily Davis
+                <button className="accept-btn">Accept</button>
+                <button className="decline-btn">Decline</button>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
-
-      {selectedAssignment && (
-        <div className="assignment-status-form">
-          <h3>Update Status</h3>
-          <select onChange={(e) => handleStatusUpdate(e.target.value)}>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
-      )}
     </div>
   );
 };

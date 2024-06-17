@@ -1,5 +1,3 @@
-/* TutorProfilePage.css */
-
 .tutor-profile-page {
   display: flex;
   flex-direction: column;
@@ -80,65 +78,89 @@
   align-items: center;
 }
 
-.send-email-btn {
-  padding: 0.5rem 1rem;
-  border: none;
+.students-section .send-email-btn {
   background: var(--color-danger);
+  border: none;
+  padding: 0.4rem 0.8rem;
   color: var(--color-white);
   cursor: pointer;
+  border-radius: 5px;
   transition: var(--transition);
 }
 
 .send-email-btn:hover {
-  background: var(--color-danger-varient);
+  background: var(--color-danger-light);
 }
 
-.create-assignment {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.create-assignment-form {
+.create-assignment,
+.update-form,
+.requests {
   background: var(--color-bg1);
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 10px;
 }
 
-.create-assignment-form .form-group {
+.create-assignment h3,
+.update-form h3,
+.requests h3 {
+  margin-bottom: 1.5rem;
+}
+
+.create-assignment-form .form-group,
+.update-form .form-group {
   margin-bottom: 1rem;
 }
 
-.create-assignment-form .form-group label {
+.create-assignment-form .form-group label,
+.update-form .form-group label {
   display: block;
   margin-bottom: 0.5rem;
 }
 
 .create-assignment-form .form-group input,
-.create-assignment-form .form-group select {
+.update-form .form-group input,
+.create-assignment-form .form-group select,
+.update-form .form-group select {
   width: 100%;
   padding: 0.8rem;
-  border: 1px solid var(--color-bg2);
+  border: none;
   border-radius: 5px;
 }
 
-.create-assignment-btn {
-  padding: 1rem 2rem;
-  border: none;
+.custom-file-upload {
+  display: none;
+}
+
+.file-upload-label {
+  background: var(--color-bg2);
+  padding: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.file-upload-icon {
+  margin-right: 0.5rem;
+}
+
+.create-assignment-btn,
+.update-btn {
   background: var(--color-danger);
+  border: none;
+  padding: 0.8rem 1.6rem;
   color: var(--color-white);
   cursor: pointer;
+  border-radius: 5px;
   transition: var(--transition);
 }
 
-.create-assignment-btn:hover {
-  background: var(--color-danger-varient);
+.create-assignment-btn:hover,
+.update-btn:hover {
+  background: var(--color-danger-light);
 }
 
 .assignments-list {
-  background: var(--color-bg1);
-  padding: 1.5rem;
-  border-radius: 10px;
+  margin-top: 2rem;
 }
 
 .assignments-list h3 {
@@ -160,120 +182,80 @@
   align-items: center;
 }
 
-.assignment-status-form {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--color-bg1);
-  padding: 1.5rem;
-  border-radius: 10px;
-  z-index: 999;
-}
-
-.assignment-status-form h3 {
-  margin-bottom: 1rem;
-}
-
-.assignment-status-form select {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid var(--color-bg2);
-  border-radius: 5px;
-}
-
 .update-status-btn,
 .view-submits-btn {
-  padding: 0.5rem 1rem;
-  border: none;
   background: var(--color-danger);
+  border: none;
+  padding: 0.4rem 0.8rem;
   color: var(--color-white);
   cursor: pointer;
+  border-radius: 5px;
   transition: var(--transition);
-  margin-left: 0.5rem;
 }
 
 .update-status-btn:hover,
 .view-submits-btn:hover {
-  background: var(--color-danger-varient);
+  background: var(--color-danger-light);
 }
 
-.update-form {
-  background: var(--color-bg1);
-  padding: 1.5rem;
-  border-radius: 10px;
+.requests ul {
+  list-style: none;
+  padding: 0;
 }
 
-.update-form .form-group {
-  margin-bottom: 1rem;
-}
-
-.update-form .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.update-form .form-group input,
-.update-form .form-group select {
-  width: 100%;
+.requests li {
+  background: var(--color-bg2);
   padding: 0.8rem;
-  border: 1px solid var(--color-bg2);
   border-radius: 5px;
-}
-
-.update-form .slots-inputs {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.update-btn {
-  padding: 1rem 2rem;
-  border: none;
-  background: var(--color-danger);
-  color: var(--color-white);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.update-btn:hover {
-  background: var(--color-danger-varient);
-}
-form-group {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
   margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Hide default file input */
-.form-group input[type="file"] {
-  display: none;
-}
-
-/* Style for custom file input */
-.custom-file-upload {
-  border: 1px solid var(--color-bg2);
-  background-color: var(--color-bg1);
+.accept-btn,
+.decline-btn {
+  background: var(--color-danger);
+  border: none;
+  padding: 0.4rem 0.8rem;
   color: var(--color-white);
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
   cursor: pointer;
-  display: inline-block;
+  border-radius: 5px;
+  transition: var(--transition);
+  margin-left: 0.5rem;
 }
 
-.custom-file-upload:hover {
-  background-color: var(--color-bg2);
+.accept-btn:hover,
+.decline-btn:hover {
+  background: var(--color-danger-light);
 }
 
-/* Style for file input label */
-.file-upload-label {
-  display: inline-block;
+.btn {
+  background: var(--color-danger);
+  border: none;
+  padding: 0.8rem 1.6rem;
+  color: var(--color-white);
+  cursor: pointer;
+  border-radius: 5px;
+  transition: var(--transition);
+  margin-top: 2rem;
 }
 
-/* Style for file input icon */
-.file-upload-icon {
-  margin-right: 0.5rem;
+.btn:hover {
+  background: var(--color-danger-light);
+}
+
+.assignment-status-form {
+  background: var(--color-bg1);
+  padding: 2rem;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.assignment-status-form h3 {
+  margin-bottom: 1.5rem;
 }
