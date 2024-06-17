@@ -24,6 +24,19 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.assignedUsers = async (req, res) => {
+  try {
+    const assignedUser = await User.findById(req.params.id);
+    if (!assignedUser) {
+      res.status(400).json({ error: "Tutor not found" });
+    }
+    res.status(200).json(assignedUser);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
 exports.updateProfile = async (req, res) => {
   const { name, email, password, role, age, phone, profileImage, ...rest } =
     req.body;
@@ -95,8 +108,8 @@ exports.addTutor = async (req, res) => {
     }
 
     // Add the student to the tutor's pending requests
-    if(tutor.pendingRequests.includes(studentId)) {
-      return res.status(400).json({ message: "Request already sent" })
+    if (tutor.pendingRequests.includes(studentId)) {
+      return res.status(400).json({ message: "Request already sent" });
     }
 
     tutor.pendingRequests.push(studentId);
@@ -104,7 +117,6 @@ exports.addTutor = async (req, res) => {
     await tutor.save();
 
     return res.status(200).json({ message: "Request sent successfully" });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -118,25 +130,29 @@ exports.approveTutorRequest = async (req, res) => {
     const studentId = req.params.id;
 
     // Check if the logged in user is a tutor
-    if(req.user.role !== "tutor"){
-      return res.status(403).json({ message: "Only tutors can approve requests" })
+    if (req.user.role !== "tutor") {
+      return res
+        .status(403)
+        .json({ message: "Only tutors can approve requests" });
     }
 
     // Find the student
     const student = await User.findById(studentId);
-    if(!student || student.role !== "student"){
-      return res.status(404).json({message: "Student not found"});
+    if (!student || student.role !== "student") {
+      return res.status(404).json({ message: "Student not found" });
     }
 
     // Find the tutor
     const tutor = await User.findById(tutorId);
 
     // Check if the request exits
-    if(!tutor.pendingRequests.includes(studentId)) {
-      return res.status(404).json({ message: "Request not found" })
+    if (!tutor.pendingRequests.includes(studentId)) {
+      return res.status(404).json({ message: "Request not found" });
     }
 
-    tutor.pendingRequests = tutor.pendingRequests.filter(id => id.toString() !== studentId.toString());
+    tutor.pendingRequests = tutor.pendingRequests.filter(
+      (id) => id.toString() !== studentId.toString()
+    );
 
     student.tutors.push(tutorId);
     tutor.students.push(studentId);
@@ -144,12 +160,17 @@ exports.approveTutorRequest = async (req, res) => {
     await student.save();
     await tutor.save();
 
-    return res.status(200).json({ message: "Tutor request approved successfully", tutors: student.tutors})
+    return res
+      .status(200)
+      .json({
+        message: "Tutor request approved successfully",
+        tutors: student.tutors,
+      });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" })
+    return res.status(500).json({ message: "Something went wrong" });
   }
-}
+};
 
 // Remove a tutor
 exports.removeTutor = async (req, res) => {
@@ -185,19 +206,16 @@ exports.removeTutor = async (req, res) => {
       const tutorIndex = targetUser.tutors.indexOf(userId);
 
       if (studentIndex === -1 || tutorIndex === -1) {
-        return res
-          .status(404)
-          .json({
-            message:
-              "Student not found in tutor's list or tutor not found in student's list",
-          });
+        return res.status(404).json({
+          message:
+            "Student not found in tutor's list or tutor not found in student's list",
+        });
       }
 
       user.students.splice(studentIndex, 1);
       targetUser.tutors.splice(tutorIndex, 1);
-
     } else {
-      return res.status(400).json({ message: "Invalid role combination" })
+      return res.status(400).json({ message: "Invalid role combination" });
     }
     await user.save();
     await targetUser.save();

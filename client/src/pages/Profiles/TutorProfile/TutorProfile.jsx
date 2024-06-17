@@ -1,20 +1,50 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import "./tutorProfile.css";
+import axios from "axios";
 
 const TutorProfile = () => {
-  const { logout } = useContext(AuthContext);
+  const { user, token, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("overview");
+  const [assignedStudents, setAssignedStudents] = useState([]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const studentPromises = user.students.map(async (studentId) => {
+          const resposne = await axios.get(
+            `http://localhost:8000/api/users/assigned-users/${studentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          return resposne.data;
+        });
+        const students = await Promise.all(studentPromises);
+        setAssignedStudents(students);
+      } catch (error) {
+        console.error("Error fetching students: ", error);
+      }
+    };
+    fetchStudents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.students]);
+
   return (
     <div className="tutor-profile-page">
       <div className="profile-header">
         <img
-          src="https://avatar.iran.liara.run/public/job/teacher/male"
+          src={
+            user.profileImage
+              ? user.profileImage
+              : "https://avatar.iran.liara.run/public/job/teacher/male"
+          }
           alt="Profile"
           className="profile-image"
         />
@@ -48,24 +78,46 @@ const TutorProfile = () => {
       <div className="profile-content">
         {activeTab === "overview" && (
           <div className="overview">
+            <div className="profile-info">
+              <h3>User Profile Information</h3>
+              <p>
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email}
+              </p>
+              <p>
+                <strong>Age:</strong> {user.age}
+              </p>
+              <p>
+                <strong>Phone:</strong> {user.phone}
+              </p>
+              <p>
+                <strong>Class:</strong> {user.class}
+              </p>
+              <p>
+                <strong>Gender:</strong> {user.gender}
+              </p>
+            </div>
             <div className="students-section">
               <h3>Assigned Students</h3>
-              <ul>
-                <li>
-                  John Doe - 10:00 AM - 11:00 AM
-                  <button className="send-email-btn">Send Email</button>
-                </li>
-                <li>
-                  Jane Smith - 11:00 AM - 12:00 PM
-                  <button className="send-email-btn">Send Email</button>
-                </li>
-                <li>
-                  Bob Johnson - 1:00 PM - 2:00 PM
-                  <button className="send-email-btn">Send Email</button>
-                </li>
-              </ul>
+
+              {assignedStudents.length > 0 ? (
+                assignedStudents.map((student) => (
+                  <ul key={student._id}>
+                    <li>
+                      {student.name}
+                      <button className="send-email-btn">Send Email</button>
+                    </li>
+                  </ul>
+                ))
+              ) : (
+                <li>No assigned student found.</li>
+              )}
             </div>
-            <button className="btn" onClick={logout}>Logout</button>
+            <button className="btn" onClick={logout}>
+              Logout
+            </button>
           </div>
         )}
         {activeTab === "create-assignment" && (
@@ -115,23 +167,17 @@ const TutorProfile = () => {
               <ul>
                 <li>
                   John Doe - Assignment 1
-                  <button className="update-status-btn">
-                    Update Status
-                  </button>
+                  <button className="update-status-btn">Update Status</button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Jane Smith - Assignment 2
-                  <button className="update-status-btn">
-                    Update Status
-                  </button>
+                  <button className="update-status-btn">Update Status</button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
                 <li>
                   Bob Johnson - Assignment 3
-                  <button className="update-status-btn">
-                    Update Status
-                  </button>
+                  <button className="update-status-btn">Update Status</button>
                   <button className="view-submits-btn">View Submits</button>
                 </li>
               </ul>
@@ -144,19 +190,19 @@ const TutorProfile = () => {
             <form>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" />
+                <input type="text" id="name" name="name" defaultValue={user.name} />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" />
+                <input type="email" id="email" name="email" defaultValue={user.email} />
               </div>
               <div className="form-group">
                 <label htmlFor="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" />
+                <input type="tel" id="phone" name="phone" defaultValue={user.phone} />
               </div>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
-                <input type="text" id="subject" name="subject" />
+                <input type="text" id="subject" name="subject" defaultValue={user.subject} />
               </div>
               <div className="form-group">
                 <label htmlFor="slots">Slots</label>
@@ -166,12 +212,14 @@ const TutorProfile = () => {
                     id="timings"
                     name="timings"
                     placeholder="Timings"
+                    defaultValue={user.timeSlots}
                   />
                   <input
                     type="number"
                     id="days"
                     name="days"
                     placeholder="No. of Days"
+                    defaultValue={user.classesPerWeek}
                   />
                 </div>
               </div>
