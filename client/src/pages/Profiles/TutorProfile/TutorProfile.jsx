@@ -43,7 +43,7 @@ const TutorProfile = () => {
           src={
             user.profileImage
               ? user.profileImage
-              : "https://avatar.iran.liara.run/public/job/teacher/male"
+              : `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}&backgroundColor=00897b,00acc1,039be5,1e88e5,3949ab,43a047,5e35b1,7cb342,8e24aa,c0ca33,d81b60,e53935,f4511e,fb8c00,fdd835,ffb300,c0aede`
           }
           alt="Profile"
           className="profile-image"
