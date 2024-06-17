@@ -1,5 +1,13 @@
+import { useState } from "react";
 import "./tutor.css";
+
 const Tutor = () => {
+  const [requestSent, setRequestSent] = useState(false);
+
+  const handleRequestClick = () => {
+    setRequestSent(true);
+  };
+
   return (
     <div className="tutor-detail-page">
       <div className="left-section">
@@ -12,6 +20,15 @@ const Tutor = () => {
           <p>Phone: +1234567890</p>
           <p>Subject: Math</p>
           <p>Qualifications: Ph.D. in Mathematics</p>
+        </div>
+        <div className="request-button">
+          <button 
+            className={`add-request-btn ${requestSent ? "request-sent" : ""}`}
+            onClick={handleRequestClick}
+            disabled={requestSent}
+          >
+            {requestSent ? "Request Sent" : "Add"}
+          </button>
         </div>
         <div className="feedback-comments glass-effect">
           <h2>Reviews</h2>
@@ -47,6 +64,7 @@ const Tutor = () => {
             <button type="submit" className="btn" style={{margin: "auto", marginTop: "12px", cursor: "pointer"}}>Submit Feedback</button>
           </form>
         </div>
+        
       </div>
     </div>
   );
