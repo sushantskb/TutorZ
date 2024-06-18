@@ -4,6 +4,7 @@ import SignUp_Img from "../../assets/signup.png";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../components/Context/AuthContext";
 import { toast } from "react-toastify";
+
 const SignUp = () => {
   const { signup, loading, error } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -15,14 +16,13 @@ const SignUp = () => {
     role: "",
     class: "",
     gender: "",
-    profileImageStudent: null,
     subject: "",
     qualification: "",
     experience: "",
     timeSlots: "",
     classesPerWeek: "",
     fees: "",
-    profileImageTeacher: null,
+    profileImage: null,
   });
 
   const handleInputChange = (e) => {
@@ -35,36 +35,73 @@ const SignUp = () => {
     setFormData({ ...formData, [name]: files[0] });
   };
 
+  const uploadImageToCloudinary = async () => {
+    try {
+      const image = new FormData();
+      image.append("file", formData.profileImage);
+      image.append("upload_preset", "tutorz");
+      image.append("cloud_name", "dbgght6ld");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dbgght6ld/image/upload",
+        {
+          method: "POST",
+          body: image,
+        }
+      );
+
+      const data = await response.json();
+      // console.log("Cloudinary response data:", data);
+
+      if (!response.ok) {
+        throw new Error(data.error.message || "Image upload failed");
+      }
+
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const filteredData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      age: formData.age,
-      phone: formData.phone,
-      role: formData.role,
-      gender: formData.gender,
-      profileImage: formData.profileImage,
-      ...(formData.role === "student" && { class: formData.class }),
-      ...(formData.role === "tutor" && {
-        subject: formData.subject,
-        qualification: formData.qualification,
-        experience: formData.experience,
-        timeSlots: formData.timeSlots,
-        classesPerWeek: formData.classesPerWeek,
-        fees: formData.fees,
-      }),
-    };
+    try {
+      const profileImageURL = await uploadImageToCloudinary();
 
-    await signup(filteredData);
-    if (error) {
-      toast.error(error, {
+      const filteredData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        age: formData.age,
+        phone: formData.phone,
+        role: formData.role,
+        gender: formData.gender,
+        profileImage: profileImageURL,
+        ...(formData.role === "student" && { class: formData.class }),
+        ...(formData.role === "tutor" && {
+          subject: formData.subject,
+          qualification: formData.qualification,
+          experience: formData.experience,
+          timeSlots: formData.timeSlots,
+          classesPerWeek: formData.classesPerWeek,
+          fees: formData.fees,
+        }),
+      };
+
+      await signup(filteredData);
+      if (error) {
+        toast.error(error, {
+          style: { background: "rgba(247, 88, 66, 0.4)", color: "white" },
+        });
+      } else {
+        toast.success("Signup Success!", {
+          style: { background: "rgb(57, 57, 57)", color: "white" },
+        });
+      }
+    } catch (error) {
+      toast.error(error.message, {
         style: { background: "rgba(247, 88, 66, 0.4)", color: "white" },
-      });
-    } else {
-      toast.success("Signup Success!", {
-        style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     }
   };
@@ -127,30 +164,15 @@ const SignUp = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="form-group full-width">
-            <label>Gender</label>
-            <div className="radio-group">
-              <label htmlFor="male-student">
-                <input
-                  type="radio"
-                  id="male-student"
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                />
-                Male
-              </label>
-              <label htmlFor="female-student">
-                <input
-                  type="radio"
-                  id="female-student"
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                />
-                Female
-              </label>
-            </div>
+          <div className="form-group half-width">
+            <label htmlFor="gender">Gender</label>
+            <input
+              type="text"
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+            />
           </div>
           <div className="form-group full-width">
             <label htmlFor="role">Role</label>
@@ -184,7 +206,7 @@ const SignUp = () => {
                   type="file"
                   id="profileImage"
                   name="profileImage"
-                  onChange={handleInputChange}
+                  onChange={handleFileChange}
                 />
               </div>
             </>

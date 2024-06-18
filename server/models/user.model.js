@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    gender: String,
     phone: String,
     class: String, // For Student
     subject: String, // For tutors

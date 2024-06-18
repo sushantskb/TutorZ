@@ -38,7 +38,7 @@ const Tutors = () => {
               key={tutor.id}
               name={tutor.name}
               subject={tutor.subject}
-              image={tutor.image}
+              image={tutor.profileImage ? tutor.profileImage : `https://api.dicebear.com/9.x/initials/svg?seed=${tutor.name}&backgroundColor=00897b,00acc1,039be5,1e88e5,3949ab,43a047,5e35b1,7cb342,8e24aa,c0ca33,d81b60,e53935,f4511e,fb8c00,fdd835,ffb300,c0aede`}
             />
           ))}
       </div>
