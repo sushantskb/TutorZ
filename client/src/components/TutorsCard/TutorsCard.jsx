@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom"
 
-const TutorsCard = ({image, name, subject}) => {
+const TutorsCard = ({id, image, name, subject}) => {
   return (
     <article className="tutor">
       <div className="tutor_image">
@@ -11,7 +11,7 @@ const TutorsCard = ({image, name, subject}) => {
       <div className="tutor_info">
         <h4>{name}</h4>
         <small>{subject}</small>
-        <Link to="/tutor/1"><button className="explore_btn">Explore More</button></Link>
+        <Link to={`/tutor/${id}`}><button className="explore_btn">Explore More</button></Link>
       </div>
     </article>
   )
