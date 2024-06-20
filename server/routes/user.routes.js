@@ -9,11 +9,13 @@ const {
   removeTutor,
   approveTutorRequest,
   assignedUsers,
+  getTutor,
 } = require("../controllers/user.controller");
 
 
 // Profiles
 router.get("/", authenticate, getUsers);
+router.get("/tutor/:id", authenticate, getTutor);
 router.get("/assigned-users/:id", authenticate, assignedUsers);
 router.put("/profile/me", authenticate, updateProfile);
 router.delete("/profile/me", authenticate, deleteProfile);
