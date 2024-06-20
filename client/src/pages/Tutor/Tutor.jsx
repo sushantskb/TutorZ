@@ -3,6 +3,7 @@ import "./tutor.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../components/Context/AuthContext";
+import Loader from "../../components/Loader/Loader";
 
 const Tutor = () => {
   const {token} = useContext(AuthContext);
@@ -36,7 +37,7 @@ const Tutor = () => {
     setRequestSent(true);
   };
 
-  if (loading) return <div>Loading....</div>
+  if (loading) return <div><Loader /></div>
 
   return (
     <div className="tutor-detail-page">

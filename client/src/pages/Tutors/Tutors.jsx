@@ -4,8 +4,10 @@ import TutorsCard from "../../components/TutorsCard/TutorsCard";
 import "./tutors.css";
 import { AuthContext } from "../../components/Context/AuthContext";
 import axios from "axios";
+import Loader from "../../components/Loader/Loader";
 const Tutors = () => {
   const { token } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true)
   const [tutors, setTutors] = useState([]);
   const fetchData = async () => {
     try {
@@ -15,17 +17,18 @@ const Tutors = () => {
         },
       });
       setTutors(response.data);
+      setLoading(false)
     } catch (error) {
       console.log(error);
+      setLoading(false)
     }
   };
-
-  console.log("Response", tutors);
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
+  if (loading) return <Loader />
   return (
     <div className="tutors">
       <h2>Our Tutors</h2>
