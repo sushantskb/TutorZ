@@ -1,25 +1,55 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./tutor.css";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../../components/Context/AuthContext";
 
 const Tutor = () => {
+  const {token} = useContext(AuthContext);
+  const {tutorId} = useParams();
+  const [tutorData, setTutorData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [requestSent, setRequestSent] = useState(false);
 
+  
+
+  useEffect(() => {
+
+    const fetchTutorData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/users/tutor/${tutorId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        setTutorData(response.data);
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+
+    fetchTutorData();
+  }, [tutorId, token]);
   const handleRequestClick = () => {
     setRequestSent(true);
   };
+
+  if (loading) return <div>Loading....</div>
 
   return (
     <div className="tutor-detail-page">
       <div className="left-section">
         <div className="profile-image">
-          <img src="https://avatar.iran.liara.run/public/job/teacher/male" alt="Tutor" />
+          <img src={tutorData.profileImage ? tutorData.profileImage : `https://api.dicebear.com/9.x/initials/svg?seed=${tutorData.name}&backgroundColor=00897b,00acc1,039be5,1e88e5,3949ab,43a047,5e35b1,7cb342,8e24aa,c0ca33,d81b60,e53935,f4511e,fb8c00,fdd835,ffb300,c0aede`} alt="Tutor" />
         </div>
         <div className="tutor-info">
-          <h2>Tutor Name</h2>
-          <p>Email: tutor@example.com</p>
-          <p>Phone: +1234567890</p>
-          <p>Subject: Math</p>
-          <p>Qualifications: Ph.D. in Mathematics</p>
+          <h2>{tutorData.name}</h2>
+          <p>Email: {tutorData.email}</p>
+          <p>Phone: {tutorData.phone}</p>
+          <p>Subject: {tutorData.subject}</p>
+          <p>Qualifications: {tutorData.qualification}</p>
         </div>
         <div className="request-button">
           <button 

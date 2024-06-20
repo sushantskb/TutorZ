@@ -15,7 +15,7 @@ const {
 
 // Profiles
 router.get("/", authenticate, getUsers);
-router.get("/tutor/:id", authenticate, getTutor);
+router.get("/tutor/:tutorId", authenticate, getTutor);
 router.get("/assigned-users/:id", authenticate, assignedUsers);
 router.put("/profile/me", authenticate, updateProfile);
 router.delete("/profile/me", authenticate, deleteProfile);

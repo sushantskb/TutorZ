@@ -26,14 +26,14 @@ exports.getUsers = async (req, res) => {
 
 exports.getTutor = async (req, res) => {
   try {
-    const tutorId = req.params.id;
+    const tutorId = req.params.tutorId;
     const tutor = await User.findById(tutorId, "-password");
 
     if(!tutor || tutor.role !== "tutor"){
       return res.status(404).json({message: "Tutor not found"})
     }
 
-    return res.status(404).json(tutor)
+    return res.status(200).json(tutor)
   } catch (error){
     console.log("Error fetching the tutor: ", error);
     return res.status(500).json({message: "Something went wrong", error});

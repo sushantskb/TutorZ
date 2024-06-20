@@ -27,7 +27,7 @@ const Routers = () => {
       />
       <Route path="/contact" element=<ContactUs /> />
       <Route
-        path="/tutor/:id"
+        path="/tutor/:tutorId"
         element={
           <ProtectedRoute>
             <Tutor />
