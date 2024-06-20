@@ -2,14 +2,87 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import "./studentProfile.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const StudentProfile = () => {
-  const { user, token, logout } = useContext(AuthContext);
+  const { user, token, logout } = useContext(AuthContext); // Removed isLoading from AuthContext
   const [activeTab, setActiveTab] = useState("overview");
   const [assignedTutors, setAssignedTutors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Local isLoading state
+
+  const [formData, setFormData] = useState({
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    profileImage: null,
+    class: user.class,
+  });
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
+  };
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setIsLoading(true); // Set isLoading to true when update process starts
+    try {
+      let profileImageUrl = user.profileImage;
+
+      // If there's a new profile image
+      if (formData.profileImage && formData.profileImage !== user.profileImage) {
+        const imageData = new FormData();
+        imageData.append("file", formData.profileImage);
+        imageData.append("upload_preset", "tutorz");
+        imageData.append("cloud_name", "dbgght6ld");
+
+        const uploadResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/dbgght6ld/image/upload",
+          {
+            method: "POST",
+            body: imageData,
+          }
+        );
+
+        const uploadData = await uploadResponse.json();
+        profileImageUrl = uploadData.secure_url;
+      }
+
+      const updatedUser = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        class: formData.class,
+        profileImage: profileImageUrl,
+      };
+
+      const response = await axios.put(
+        "http://localhost:8000/api/users/profile/me",
+        updatedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      // Handle success
+      toast.success("Updated successfully");
+      // Optionally, you can update the user context with the new data
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Error updating profile");
+    } finally {
+      setIsLoading(false); // Set isLoading to false after update process ends
+    }
   };
 
   useEffect(() => {
@@ -24,7 +97,6 @@ const StudentProfile = () => {
               },
             }
           );
-          console.log("data", response);
           return response.data;
         });
         const tutors = await Promise.all(tutorPromises);
@@ -37,7 +109,7 @@ const StudentProfile = () => {
     if (user.tutors.length > 0) {
       fetchTutors();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.tutors]); // Execute whenever user.tutors change
 
   return (
@@ -121,14 +193,15 @@ const StudentProfile = () => {
         ) : (
           <div className="update-form">
             <h3>Update Profile</h3>
-            <form>
+            <form onSubmit={handleUpdateProfile}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  defaultValue={user.name}
+                  value={formData.name}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="form-group">
@@ -137,7 +210,8 @@ const StudentProfile = () => {
                   type="email"
                   id="email"
                   name="email"
-                  defaultValue={user.email}
+                  value={formData.email}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="form-group">
@@ -146,7 +220,8 @@ const StudentProfile = () => {
                   type="tel"
                   id="phone"
                   name="phone"
-                  defaultValue={user.phone}
+                  value={formData.phone}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="form-group">
@@ -155,16 +230,28 @@ const StudentProfile = () => {
                   type="text"
                   id="class"
                   name="class"
-                  defaultValue={user.class}
+                  value={formData.class}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="profile-image">Profile Image</label>
-                <input type="file" id="profile-image" name="profile-image" />
+                <label htmlFor="profileImage">Profile Image</label>
+                <input
+                  type="file"
+                  id="profileImage"
+                  name="profileImage"
+                  onChange={handleInputChange}
+                />
               </div>
-              <button type="submit" className="update-btn">
-                Update
-              </button>
+              {isLoading ? (
+                <button disabled={true} type="submit" className="update-btn">
+                  Updating...
+                </button>
+              ) : (
+                <button type="submit" className="update-btn">
+                  Update
+                </button>
+              )}
             </form>
           </div>
         )}

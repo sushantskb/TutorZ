@@ -2,21 +2,101 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import "./tutorProfile.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const TutorProfile = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("overview");
   const [assignedStudents, setAssignedStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    subject: user.subject,
+    slots: user.slots,
+    classesPerWeek: user.classesPerWeek,
+    profileImage: null,
+  });
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
+  };
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setIsLoading(true); // Set isLoading to true when update process starts
+    try {
+      let profileImageUrl = user.profileImage;
+
+      // If there's a new profile image
+      if (
+        formData.profileImage &&
+        formData.profileImage !== user.profileImage
+      ) {
+        const imageData = new FormData();
+        imageData.append("file", formData.profileImage);
+        imageData.append("upload_preset", "tutorz");
+        imageData.append("cloud_name", "dbgght6ld");
+
+        const uploadResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/dbgght6ld/image/upload",
+          {
+            method: "POST",
+            body: imageData,
+          }
+        );
+
+        const uploadData = await uploadResponse.json();
+        profileImageUrl = uploadData.secure_url;
+      }
+
+      const updatedUser = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        slots: formData.slots,
+        classesPerWeek: formData.classesPerWeek,
+        profileImage: profileImageUrl,
+      };
+
+      const response = await axios.put(
+        "http://localhost:8000/api/users/profile/me",
+        updatedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      // Handle success
+      toast.success("Updated successfully");
+      // Optionally, you can update the user context with the new data
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Error updating profile");
+    } finally {
+      setIsLoading(false); // Set isLoading to false after update process ends
+    }
   };
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const studentPromises = user.students.map(async (studentId) => {
-          const resposne = await axios.get(
+          const response = await axios.get(
             `http://localhost:8000/api/users/assigned-users/${studentId}`,
             {
               headers: {
@@ -24,7 +104,7 @@ const TutorProfile = () => {
               },
             }
           );
-          return resposne.data;
+          return response.data;
         });
         const students = await Promise.all(studentPromises);
         setAssignedStudents(students);
@@ -187,49 +267,86 @@ const TutorProfile = () => {
         {activeTab === "update" && (
           <div className="update-form">
             <h3>Update Profile</h3>
-            <form>
+            <form onSubmit={handleUpdateProfile}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" defaultValue={user.name} />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name} // Updated binding
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" defaultValue={user.email} />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email} // Updated binding
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" defaultValue={user.phone} />
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone} // Updated binding
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
-                <input type="text" id="subject" name="subject" defaultValue={user.subject} />
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject} // Updated binding
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="slots">Slots</label>
                 <div className="slots-inputs">
                   <input
                     type="text"
-                    id="timings"
-                    name="timings"
+                    id="slots"
+                    name="slots"
                     placeholder="Timings"
-                    defaultValue={user.timeSlots}
+                    value={formData.slots} // Updated binding
+                    onChange={handleInputChange}
                   />
                   <input
                     type="number"
-                    id="days"
-                    name="days"
+                    id="classesPerWeek"
+                    name="classesPerWeek"
                     placeholder="No. of Days"
-                    defaultValue={user.classesPerWeek}
+                    value={formData.classesPerWeek} // Updated binding
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="profile-image">Profile Image</label>
-                <input type="file" id="profile-image" name="profile-image" />
+                <label htmlFor="profileImage">Profile Image</label>
+                <input
+                  type="file"
+                  id="profileImage"
+                  name="profileImage"
+                  onChange={handleInputChange}
+                />
               </div>
-              <button type="submit" className="update-btn">
-                Update
-              </button>
+              {isLoading ? (
+                <button disabled={true} type="submit" className="update-btn">
+                  Updating....
+                </button>
+              ) : (
+                <button type="submit" className="update-btn">
+                  Update
+                </button>
+              )}
             </form>
           </div>
         )}
