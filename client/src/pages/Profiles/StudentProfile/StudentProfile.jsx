@@ -37,7 +37,10 @@ const StudentProfile = () => {
       let profileImageUrl = user.profileImage;
 
       // If there's a new profile image
-      if (formData.profileImage && formData.profileImage !== user.profileImage) {
+      if (
+        formData.profileImage &&
+        formData.profileImage !== user.profileImage
+      ) {
         const imageData = new FormData();
         imageData.append("file", formData.profileImage);
         imageData.append("upload_preset", "tutorz");
@@ -85,32 +88,51 @@ const StudentProfile = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchTutors = async () => {
-      try {
-        const tutorPromises = user.tutors.map(async (tutorId) => {
-          const response = await axios.get(
-            `http://localhost:8000/api/users/assigned-users/${tutorId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          return response.data;
-        });
-        const tutors = await Promise.all(tutorPromises);
-        setAssignedTutors(tutors);
-      } catch (error) {
-        console.error("Error fetching tutors:", error);
-      }
-    };
+  const fetchTutors = async () => {
+    try {
+      const tutorPromises = user.tutors.map(async (tutorId) => {
+        const response = await axios.get(
+          `http://localhost:8000/api/users/assigned-users/${tutorId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      });
+      const tutors = await Promise.all(tutorPromises);
+      setAssignedTutors(tutors);
+    } catch (error) {
+      console.error("Error fetching tutors:", error);
+    }
+  };
 
+  useEffect(() => {
     if (user.tutors.length > 0) {
       fetchTutors();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.tutors]); // Execute whenever user.tutors change
+
+  const handleRemoveTutor = async (tutorId) => {
+    try {
+        await axios.delete(
+        `http://localhost:8000/api/users/remove-user/${tutorId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success("Tutor removed successfully");
+      fetchTutors();
+    } catch (error) {
+      console.error("Error removing tutor:", error);
+      toast.error("Error removing tutor");
+    }
+  };
 
   return (
     <div className="profile-page">
@@ -170,6 +192,9 @@ const StudentProfile = () => {
                   assignedTutors.map((tutor) => (
                     <li key={tutor._id}>
                       {tutor.name} - {tutor.subject}
+                      <button className="remove-btn" onClick={() => handleRemoveTutor(tutor._id)}>
+                        Remove
+                      </button>
                     </li>
                   ))
                 ) : (

@@ -29,16 +29,16 @@ exports.getTutor = async (req, res) => {
     const tutorId = req.params.tutorId;
     const tutor = await User.findById(tutorId, "-password");
 
-    if(!tutor || tutor.role !== "tutor"){
-      return res.status(404).json({message: "Tutor not found"})
+    if (!tutor || tutor.role !== "tutor") {
+      return res.status(404).json({ message: "Tutor not found" });
     }
 
-    return res.status(200).json(tutor)
-  } catch (error){
+    return res.status(200).json(tutor);
+  } catch (error) {
     console.log("Error fetching the tutor: ", error);
-    return res.status(500).json({message: "Something went wrong", error});
+    return res.status(500).json({ message: "Something went wrong", error });
   }
-}
+};
 
 exports.assignedUsers = async (req, res) => {
   try {
@@ -106,6 +106,7 @@ exports.deleteProfile = async (req, res) => {
 };
 
 // Functionalities
+// add tutor
 exports.addTutor = async (req, res) => {
   try {
     console.log(req.user);
@@ -136,6 +137,40 @@ exports.addTutor = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+// fetch pending requests
+exports.fetchPendingRequests = async (req, res) => {
+  try {
+    // Ensure the logged-in user is a tutor
+    if (req.user.role !== "tutor") {
+      return res
+        .status(403)
+        .json({ message: "Only tutors can fetch pending requests" });
+    }
+
+    // Find the tutor by ID
+    const tutorId = req.user._id;
+    const tutor = await User.findById(tutorId).populate(
+      "pendingRequests",
+      "name"
+    );
+
+    if (!tutor) {
+      return res.status(404).json({ message: "Tutor not found" });
+    }
+
+    // Extract pending requests with only id and name
+    const pendingRequests = tutor.pendingRequests.map((student) => ({
+      _id: student._id,
+      name: student.name,
+    }));
+
+    return res.status(200).json(pendingRequests);
+  } catch (error) {
+    console.log("Error fetching pending requests: ", error);
+    return res.status(500).json({ message: "Something went wrong", error });
   }
 };
 
@@ -176,15 +211,45 @@ exports.approveTutorRequest = async (req, res) => {
     await student.save();
     await tutor.save();
 
-    return res
-      .status(200)
-      .json({
-        message: "Tutor request approved successfully",
-        tutors: student.tutors,
-      });
+    return res.status(200).json({
+      message: "Tutor request approved successfully",
+      tutors: student.tutors,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+// check tutor
+exports.checkTutor = async (req, res) => {
+  try {
+    const studentId = req.user._id; // logged in user
+    const tutorId = req.params.id;
+
+    // check if the logged-in user is a student
+    if (req.user.role !== "student") {
+      return res
+        .status(403)
+        .json({ message: "Only students can check tutors" });
+    }
+
+    // Find the student
+    const student = await User.findById(studentId).populate("tutors", "_id");
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // check if the tutor is in the student's list of tutors
+    const isTutorAdded = student.tutors.some(
+      (tutor) => tutor._id.toString() === tutorId
+    );
+
+    return res.status(200).json({ added: isTutorAdded });
+  } catch (error) {
+    console.log("Error checking the tutor: ", error);
+    return res.status(500).json({ message: "Something went wrong", error });
   }
 };
 

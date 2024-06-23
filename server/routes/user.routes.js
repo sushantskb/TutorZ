@@ -10,6 +10,8 @@ const {
   approveTutorRequest,
   assignedUsers,
   getTutor,
+  fetchPendingRequests,
+  checkTutor,
 } = require("../controllers/user.controller");
 
 
@@ -21,8 +23,10 @@ router.put("/profile/me", authenticate, updateProfile);
 router.delete("/profile/me", authenticate, deleteProfile);
 
 // Functionalities
+router.get("/pending-requests", authenticate, fetchPendingRequests);
+router.get("/check-tutor/:tutorId", authenticate, checkTutor);
 router.post("/add-tutor/:id",authenticate, addTutor), // tutor id
 router.post("/approve-tutor/:id", authenticate, approveTutorRequest); // student id
-router.delete("/remove-tutor/:id",authenticate, removeTutor); // target id (student or tutor)
+router.delete("/remove-user/:id",authenticate, removeTutor); // target id (student or tutor)
 
 module.exports = router;

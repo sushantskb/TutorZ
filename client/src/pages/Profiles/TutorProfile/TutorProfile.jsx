@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Context/AuthContext";
-import "./tutorProfile.css";
+import "./tutorProfilade.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -8,6 +8,7 @@ const TutorProfile = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("overview");
   const [assignedStudents, setAssignedStudents] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -19,6 +20,8 @@ const TutorProfile = () => {
     classesPerWeek: user.classesPerWeek,
     profileImage: null,
   });
+
+  console.log("User: ", user);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -32,6 +35,7 @@ const TutorProfile = () => {
     });
   };
 
+  // handle profile update
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Set isLoading to true when update process starts
@@ -92,29 +96,96 @@ const TutorProfile = () => {
     }
   };
 
+  const fetchStudents = async () => {
+    try {
+      const studentPromises = user.students.map(async (studentId) => {
+        const response = await axios.get(
+          `http://localhost:8000/api/users/assigned-users/${studentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      });
+      const students = await Promise.all(studentPromises);
+      setAssignedStudents(students);
+    } catch (error) {
+      console.error("Error fetching students: ", error);
+    }
+  };
+
+  // request for fetching students
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const studentPromises = user.students.map(async (studentId) => {
-          const response = await axios.get(
-            `http://localhost:8000/api/users/assigned-users/${studentId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          return response.data;
-        });
-        const students = await Promise.all(studentPromises);
-        setAssignedStudents(students);
-      } catch (error) {
-        console.error("Error fetching students: ", error);
-      }
-    };
     fetchStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.students]);
+
+  // request for fetching the pending requests
+  useEffect(() => {
+    const fetchPendingRequests = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/users/pending-requests",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPendingRequests(response.data);
+      } catch (error) {
+        console.error("Error fetching pending requests: ", error);
+        toast.error("Error fetching pending requests");
+      }
+    };
+
+    fetchPendingRequests();
+  }, [token]);
+
+  // handle approve tutor request
+  const handleApproveRequest = async (studentId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/users/approve-tutor/${studentId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      // Update pending requests after approval
+      setPendingRequests((prevRequests) =>
+        prevRequests.filter((request) => request._id !== studentId)
+      );
+      toast.success("Tutor request approved successfully");
+    } catch (error) {
+      console.error("Error approving tutor request:", error);
+      toast.error("Error approving tutor request");
+    }
+  };
+
+  const handleRemoveStudent = async (studentId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/users/remove-user/${studentId}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      toast.success("Student removed successfully");
+      fetchStudents()
+    } catch (error) {
+      console.error("Error removing tutor:", error);
+      toast.error("Error removing tutor");
+    }
+  }
 
   return (
     <div className="tutor-profile-page">
@@ -188,6 +259,7 @@ const TutorProfile = () => {
                     <li>
                       {student.name}
                       <button className="send-email-btn">Send Email</button>
+                      <button onClick={() => handleRemoveStudent(student._id)} className="send-email-btn">Remove</button>
                     </li>
                   </ul>
                 ))
@@ -354,21 +426,17 @@ const TutorProfile = () => {
           <div className="requests">
             <h3>Student Requests</h3>
             <ul>
-              <li>
-                Alice Johnson
-                <button className="accept-btn">Accept</button>
-                <button className="decline-btn">Decline</button>
-              </li>
-              <li>
-                Michael Brown
-                <button className="accept-btn">Accept</button>
-                <button className="decline-btn">Decline</button>
-              </li>
-              <li>
-                Emily Davis
-                <button className="accept-btn">Accept</button>
-                <button className="decline-btn">Decline</button>
-              </li>
+              {pendingRequests.length > 0 ? (
+                pendingRequests.map((request) => (
+                  <li key={request._id}>
+                    {request.name}
+                    <button className="accept-btn" onClick={() => handleApproveRequest(request._id)}>Accept</button>
+                    <button className="decline-btn">Decline</button>
+                  </li>
+                ))
+              ) : (
+                <li>No pending requests.</li>
+              )}
             </ul>
           </div>
         )}
