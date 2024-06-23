@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Context/AuthContext";
-import "./tutorProfilade.css";
+import "./tutorProfile.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
