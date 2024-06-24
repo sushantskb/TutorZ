@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../components/Context/AuthContext";
 import Loader from "../../components/Loader/Loader";
+import { toast } from "react-toastify";
 
 const Tutor = () => {
   const { token } = useContext(AuthContext);
@@ -14,6 +15,12 @@ const Tutor = () => {
   const [requestApproved, setRequestApproved] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
+
+  const [feedback, setFeedBack] = useState({
+    title: "",
+    content: "",
+    rating: 0,
+  });
 
   useEffect(() => {
     const fetchTutorData = async () => {
@@ -94,6 +101,43 @@ const Tutor = () => {
       }
     } catch (error) {
       console.log(error);
+      setError(error);
+    }
+  };
+
+  const handleFeedbackChange = (e) => {
+    const { name, value } = e.target;
+    setFeedBack((prevFeedback) => ({
+      ...prevFeedback,
+      [name]: value,
+    }));
+  };
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/reviews/create-review/${tutorId}`,
+        feedback,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setReviews((prevReviews) => [...prevReviews, response.data.review]);
+        toast.success("Feedback Submited", {
+          style: { background: "rgb(57, 57, 57)", color: "white" },
+        });
+        setFeedBack({
+          title: "",
+          content: "",
+          rating: 0,
+        });
+      }
+    } catch (error) {
       setError(error);
     }
   };
@@ -189,17 +233,44 @@ const Tutor = () => {
         </div>
         <div className="feedback-form glass-effect">
           <h2>Submit Feedback</h2>
-          <form>
+          <form onSubmit={handleFeedbackSubmit}>
             <div className="form-group">
               <label htmlFor="feedback-name">Name</label>
-              <input type="text" id="feedback-name" name="feedback-name" />
+              <input
+                type="text"
+                id="feedback-name"
+                name="title"
+                value={feedback.title}
+                onChange={handleFeedbackChange}
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="feedback-comment">Comment</label>
               <textarea
                 id="feedback-comment"
-                name="feedback-comment"
+                name="content"
+                value={feedback.content}
+                onChange={handleFeedbackChange}
+                required
               ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="feedback-rating">Rating</label>
+              <select
+                id="feedback-rating"
+                name="rating"
+                value={feedback.rating}
+                onChange={handleFeedbackChange}
+                required
+              >
+                <option value="0">Select Rating</option>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+              </select>
             </div>
             <button
               type="submit"

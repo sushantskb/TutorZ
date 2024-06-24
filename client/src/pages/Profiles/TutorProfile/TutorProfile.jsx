@@ -86,11 +86,15 @@ const TutorProfile = () => {
 
       console.log(response);
       // Handle success
-      toast.success("Updated successfully");
+      toast.success("Updated successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
       // Optionally, you can update the user context with the new data
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Error updating profile");
+      toast.error("Error updating profile", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     } finally {
       setIsLoading(false); // Set isLoading to false after update process ends
     }
@@ -172,20 +176,25 @@ const TutorProfile = () => {
   const handleRemoveStudent = async (studentId) => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/users/remove-user/${studentId}`,{
+        `http://localhost:8000/api/users/remove-user/${studentId}`,
+        {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
-      )
+      );
 
-      toast.success("Student removed successfully");
-      fetchStudents()
+      toast.success("Student removed successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
+      fetchStudents();
     } catch (error) {
       console.error("Error removing tutor:", error);
-      toast.error("Error removing tutor");
+      toast.error("Error removing tutor", {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      });
     }
-  }
+  };
 
   return (
     <div className="tutor-profile-page">
@@ -259,7 +268,12 @@ const TutorProfile = () => {
                     <li>
                       {student.name}
                       <button className="send-email-btn">Send Email</button>
-                      <button onClick={() => handleRemoveStudent(student._id)} className="send-email-btn">Remove</button>
+                      <button
+                        onClick={() => handleRemoveStudent(student._id)}
+                        className="send-email-btn"
+                      >
+                        Remove
+                      </button>
                     </li>
                   </ul>
                 ))
@@ -430,7 +444,12 @@ const TutorProfile = () => {
                 pendingRequests.map((request) => (
                   <li key={request._id}>
                     {request.name}
-                    <button className="accept-btn" onClick={() => handleApproveRequest(request._id)}>Accept</button>
+                    <button
+                      className="accept-btn"
+                      onClick={() => handleApproveRequest(request._id)}
+                    >
+                      Accept
+                    </button>
                     <button className="decline-btn">Decline</button>
                   </li>
                 ))

@@ -76,21 +76,49 @@
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: bold;
 }
 
-.form-group input[type="text"],
-.form-group textarea {
+.form-group input,
+.form-group textarea,
+.form-group select {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid var(--color-bg2);
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  background: var(--color-bg1);
-  color: var(--color-white);
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #333;
 }
 
 .feedback-form textarea {
   resize: vertical;
+  background-color: #ccc;
+}
+
+.form-group select {
+  -webkit-appearance: none; /* For Chrome, Safari, and Opera */
+  -moz-appearance: none; /* For Firefox */
+  appearance: none; /* For other browsers */
+  background-color: #9b9892;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: 50%;
+  cursor: pointer;
+}
+
+.form-group select option {
+  padding: 10px;
+  color: #333;
+}
+
+/* For consistent styling across browsers */
+select::-ms-expand {
+  display: none;
 }
 
 .btn {

@@ -78,11 +78,15 @@ const StudentProfile = () => {
 
       console.log(response);
       // Handle success
-      toast.success("Updated successfully");
+      toast.success("Updated successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
       // Optionally, you can update the user context with the new data
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Error updating profile");
+      toast.error("Error updating profile", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     } finally {
       setIsLoading(false); // Set isLoading to false after update process ends
     }
@@ -117,7 +121,7 @@ const StudentProfile = () => {
 
   const handleRemoveTutor = async (tutorId) => {
     try {
-        await axios.delete(
+      await axios.delete(
         `http://localhost:8000/api/users/remove-user/${tutorId}`,
         {
           headers: {
@@ -126,11 +130,15 @@ const StudentProfile = () => {
         }
       );
 
-      toast.success("Tutor removed successfully");
+      toast.success("Tutor removed successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
       fetchTutors();
     } catch (error) {
       console.error("Error removing tutor:", error);
-      toast.error("Error removing tutor");
+      toast.error("Error removing tutor", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     }
   };
 
@@ -192,7 +200,10 @@ const StudentProfile = () => {
                   assignedTutors.map((tutor) => (
                     <li key={tutor._id}>
                       {tutor.name} - {tutor.subject}
-                      <button className="remove-btn" onClick={() => handleRemoveTutor(tutor._id)}>
+                      <button
+                        className="remove-btn"
+                        onClick={() => handleRemoveTutor(tutor._id)}
+                      >
                         Remove
                       </button>
                     </li>
