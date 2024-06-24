@@ -12,6 +12,7 @@ const Tutor = () => {
   const [loading, setLoading] = useState(true);
   const [requestSent, setRequestSent] = useState(false);
   const [requestApproved, setRequestApproved] = useState(false);
+  const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -55,8 +56,26 @@ const Tutor = () => {
       }
     };
 
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/reviews/all-reviews/${tutorId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setReviews(response.data.reviews);
+      } catch (error) {
+        setError(error);
+      }
+    };
+
     fetchTutorData();
     checkIfTutorAdded();
+    fetchReviews();
   }, [tutorId, token]);
 
   const handleRequestClick = async () => {
@@ -88,7 +107,7 @@ const Tutor = () => {
       }, 5000); // stimulate a 5-second delay
     };
 
-    if(requestSent && !requestApproved){
+    if (requestSent && !requestApproved) {
       stimulateTutorApproval();
     }
   }, [requestSent, requestApproved]);
@@ -123,7 +142,13 @@ const Tutor = () => {
         </div>
         <div className="request-button">
           <button
-            className={`add-request-btn ${requestApproved ? "request-approved" : requestSent ? "request-sent" : ""}`}
+            className={`add-request-btn ${
+              requestApproved
+                ? "request-approved"
+                : requestSent
+                ? "request-sent"
+                : ""
+            }`}
             onClick={handleRequestClick}
             disabled={requestSent || requestApproved}
           >
@@ -132,19 +157,21 @@ const Tutor = () => {
         </div>
         <div className="feedback-comments glass-effect">
           <h2>Reviews</h2>
-          <div className="comment">
-            <p>
-              <strong>John Doe:</strong> Great tutor! Helped me understand
-              complex topics.
-            </p>
-            <div className="stars">★★★★★</div>
-          </div>
-          <div className="comment">
-            <p>
-              <strong>Jane Smith:</strong> Very patient and knowledgeable.
-            </p>
-            <div className="stars">★★★★☆</div>
-          </div>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div className="comment" key={review.id}>
+                <p>
+                  <strong>{review.studentId.name}:</strong> {review.content}
+                </p>
+                <div className="stars">
+                  {"★".repeat(review.rating)}
+                  {"☆".repeat(5 - review.rating)}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No reviews yet</p>
+          )}
         </div>
       </div>
       <div className="right-section">
