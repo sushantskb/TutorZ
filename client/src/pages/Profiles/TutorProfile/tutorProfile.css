@@ -259,3 +259,101 @@
 .assignment-status-form h3 {
   margin-bottom: 1.5rem;
 }
+
+
+.slots {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.slots-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.slots-tabs button {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.slots-tabs button.active {
+  background-color: #f1cb0c;
+  color: white;
+}
+
+.slots-content {
+  display: flex;
+  gap: 20px;
+}
+
+.create-slot-form,
+.update-slot-form {
+  flex: 1;
+}
+
+.create-slot-form h3,
+.update-slot-form h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.create-slot-btn,
+.update-slot-btn {
+  background-color: #f1cb0c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.create-slot-btn:hover,
+.update-slot-btn:hover {
+  background-color: #f1cb0c;
+}
+
+.created-slots {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.created-slots h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.created-slots ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.created-slots ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.created-slots ul li:last-child {
+  margin-bottom: 0;
+}

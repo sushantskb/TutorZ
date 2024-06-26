@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const TutorProfile = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("overview");
+  const [activeSlotsTab, setActiveSlotsTab] = useState("create-slot");
   const [assignedStudents, setAssignedStudents] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +26,10 @@ const TutorProfile = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleSlotsTabChange = (tab) => {
+    setActiveSlotsTab(tab);
   };
 
   const handleInputChange = (e) => {
@@ -120,35 +125,15 @@ const TutorProfile = () => {
     }
   };
 
-  // request for fetching students
+  
+
   useEffect(() => {
     fetchStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.students]);
 
-  // request for fetching the pending requests
-  useEffect(() => {
-    const fetchPendingRequests = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/api/users/pending-requests",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPendingRequests(response.data);
-      } catch (error) {
-        console.error("Error fetching pending requests: ", error);
-        toast.error("Error fetching pending requests");
-      }
-    };
 
-    fetchPendingRequests();
-  }, [token]);
 
-  // handle approve tutor request
   const handleApproveRequest = async (studentId) => {
     try {
       const response = await axios.post(
@@ -191,9 +176,19 @@ const TutorProfile = () => {
     } catch (error) {
       console.error("Error removing tutor:", error);
       toast.error("Error removing tutor", {
-        style: { background: "rgb(57, 57, 57)", color: "white" }
+        style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     }
+  };
+
+  const handleCreateSlot = async (e) => {
+    e.preventDefault();
+    // Logic for creating a slot
+  };
+
+  const handleUpdateSlot = async (e) => {
+    e.preventDefault();
+    // Logic for updating a slot
   };
 
   return (
@@ -232,6 +227,12 @@ const TutorProfile = () => {
             onClick={() => handleTabChange("requests")}
           >
             Requests
+          </button>
+          <button
+            className={activeTab === "slots" ? "active" : ""}
+            onClick={() => handleTabChange("slots")}
+          >
+            Slots
           </button>
         </div>
       </div>
@@ -457,6 +458,75 @@ const TutorProfile = () => {
                 <li>No pending requests.</li>
               )}
             </ul>
+          </div>
+        )}
+        {activeTab === "slots" && (
+          <div className="slots">
+            <div className="slots-tabs">
+              <button
+                className={activeSlotsTab === "create-slot" ? "active" : ""}
+                onClick={() => handleSlotsTabChange("create-slot")}
+              >
+                Create Slot
+              </button>
+              <button
+                className={activeSlotsTab === "update-slot" ? "active" : ""}
+                onClick={() => handleSlotsTabChange("update-slot")}
+              >
+                Update Slot
+              </button>
+            </div>
+            <div className="slots-content">
+              {activeSlotsTab === "create-slot" && (
+                <div className="create-slot-form">
+                  <h3>Create Slot</h3>
+                  <form onSubmit={handleCreateSlot}>
+                    {/* Form fields for creating a slot */}
+                    <div className="form-group">
+                      <label htmlFor="slotTime">Slot Time</label>
+                      <input type="text" id="slotTime" name="slotTime" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="slotDays">Slot Days</label>
+                      <input type="text" id="slotDays" name="slotDays" />
+                    </div>
+                    <button type="submit" className="create-slot-btn">
+                      Create Slot
+                    </button>
+                  </form>
+                </div>
+              )}
+              {activeSlotsTab === "update-slot" && (
+                <div className="update-slot-form">
+                  <h3>Update Slot</h3>
+                  <form onSubmit={handleUpdateSlot}>
+                    {/* Form fields for updating a slot */}
+                    <div className="form-group">
+                      <label htmlFor="slotId">Slot ID</label>
+                      <input type="text" id="slotId" name="slotId" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="newSlotTime">New Slot Time</label>
+                      <input type="text" id="newSlotTime" name="newSlotTime" />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="newSlotDays">New Slot Days</label>
+                      <input type="text" id="newSlotDays" name="newSlotDays" />
+                    </div>
+                    <button type="submit" className="update-slot-btn">
+                      Update Slot
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+            <div className="created-slots">
+              <h3>Created Slots</h3>
+              <ul>
+                <li>10:00 AM - Monday, Wednesday</li>
+                <li>02:00 PM - Tuesday, Thursday</li>
+              </ul>
+            </div>
           </div>
         )}
       </div>
