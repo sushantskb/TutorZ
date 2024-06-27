@@ -11,6 +11,7 @@ const TutorProfile = () => {
   const [assignedStudents, setAssignedStudents] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [slots, setSlots] = useState([]);
 
   const [formData, setFormData] = useState({
     name: user.name,
@@ -22,7 +23,15 @@ const TutorProfile = () => {
     profileImage: null,
   });
 
-  console.log("User: ", user);
+  const [slotFormData, setSlotFormData] = useState({
+    date: "",
+    startTime: "",
+    endTime: "",
+    capacity: 0,
+    duration: 0,
+  });
+
+  // console.log("User: ", user);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -37,6 +46,14 @@ const TutorProfile = () => {
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
+    });
+  };
+
+  const handleSlotInputChange = (e) => {
+    const { name, value } = e.target;
+    setSlotFormData({
+      ...slotFormData,
+      [name]: value,
     });
   };
 
@@ -125,14 +142,36 @@ const TutorProfile = () => {
     }
   };
 
-  
-
   useEffect(() => {
     fetchStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.students]);
 
+  const fetchSlots = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/slots", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      const formattedSlots = response.data.slots.map((slot) => ({
+        ...slot,
+        date: new Date(slot.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }),
+      }));
+      setSlots(formattedSlots);
+    } catch (error) {
+      console.error("Error fetching slots: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSlots();
+  }, []);
 
   const handleApproveRequest = async (studentId) => {
     try {
@@ -183,12 +222,26 @@ const TutorProfile = () => {
 
   const handleCreateSlot = async (e) => {
     e.preventDefault();
-    // Logic for creating a slot
-  };
+    setIsLoading(true);
 
-  const handleUpdateSlot = async (e) => {
-    e.preventDefault();
-    // Logic for updating a slot
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/slots/create-slots",
+        slotFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      toast.success("Slot created successfully");
+    } catch (err) {
+      console.error("Error creating slot:", err);
+      toast.error("Error creating slot:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -483,23 +536,76 @@ const TutorProfile = () => {
                   <form onSubmit={handleCreateSlot}>
                     {/* Form fields for creating a slot */}
                     <div className="form-group">
-                      <label htmlFor="slotTime">Slot Time</label>
-                      <input type="text" id="slotTime" name="slotTime" />
+                      <label htmlFor="date">Date</label>
+                      <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value={slotFormData.date}
+                        onChange={handleSlotInputChange}
+                      />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="slotDays">Slot Days</label>
-                      <input type="text" id="slotDays" name="slotDays" />
+                      <label htmlFor="startTime">Start Time</label>
+                      <input
+                        type="time"
+                        id="startTime"
+                        name="startTime"
+                        value={slotFormData.startTime}
+                        onChange={handleSlotInputChange}
+                      />
                     </div>
-                    <button type="submit" className="create-slot-btn">
-                      Create Slot
-                    </button>
+                    <div className="form-group">
+                      <label htmlFor="endTime">End Time</label>
+                      <input
+                        type="time"
+                        id="endTime"
+                        name="endTime"
+                        value={slotFormData.endTime}
+                        onChange={handleSlotInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="capacity">Capacity</label>
+                      <input
+                        type="number"
+                        id="capacity"
+                        name="capacity"
+                        value={slotFormData.capacity}
+                        onChange={handleSlotInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="duration">Duration (in minutes)</label>
+                      <input
+                        type="number"
+                        id="duration"
+                        name="duration"
+                        value={slotFormData.duration}
+                        onChange={handleSlotInputChange}
+                      />
+                    </div>
+
+                    {isLoading ? (
+                      <button
+                        disabled
+                        type="submit"
+                        className="create-slot-btn"
+                      >
+                        Creating....
+                      </button>
+                    ) : (
+                      <button type="submit" className="create-slot-btn">
+                        Create Slot
+                      </button>
+                    )}
                   </form>
                 </div>
               )}
               {activeSlotsTab === "update-slot" && (
                 <div className="update-slot-form">
                   <h3>Update Slot</h3>
-                  <form onSubmit={handleUpdateSlot}>
+                  <form>
                     {/* Form fields for updating a slot */}
                     <div className="form-group">
                       <label htmlFor="slotId">Slot ID</label>
@@ -522,10 +628,17 @@ const TutorProfile = () => {
             </div>
             <div className="created-slots">
               <h3>Created Slots</h3>
-              <ul>
-                <li>10:00 AM - Monday, Wednesday</li>
-                <li>02:00 PM - Tuesday, Thursday</li>
-              </ul>
+              {slots.length > 0 ? (
+                <ul>
+                  {slots.map((slot) => (
+                    <li key={slot._id}>
+                      {slot.startTime} - {slot.endTime} {slot.date}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No slots made yet.</p>
+              )}
             </div>
           </div>
         )}
