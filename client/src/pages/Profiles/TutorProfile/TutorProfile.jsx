@@ -244,6 +244,24 @@ const TutorProfile = () => {
     }
   };
 
+  const handleDeleteSlot = async (slotId) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/slots/delete-slot/${slotId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Slot Deleted", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
+      fetchSlots();
+    } catch (error) {
+      console.error("Error in deleting slot:", error.message);
+      toast.error("Error in deleting slot", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
+    }
+  };
   return (
     <div className="tutor-profile-page">
       <div className="profile-header">
@@ -523,10 +541,10 @@ const TutorProfile = () => {
                 Create Slot
               </button>
               <button
-                className={activeSlotsTab === "update-slot" ? "active" : ""}
-                onClick={() => handleSlotsTabChange("update-slot")}
+                className={activeSlotsTab === "view-slots" ? "active" : ""}
+                onClick={() => handleSlotsTabChange("view-slots")}
               >
-                Update Slot
+                View Slots
               </button>
             </div>
             <div className="slots-content">
@@ -602,42 +620,44 @@ const TutorProfile = () => {
                   </form>
                 </div>
               )}
-              {activeSlotsTab === "update-slot" && (
-                <div className="update-slot-form">
-                  <h3>Update Slot</h3>
-                  <form>
-                    {/* Form fields for updating a slot */}
-                    <div className="form-group">
-                      <label htmlFor="slotId">Slot ID</label>
-                      <input type="text" id="slotId" name="slotId" />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="newSlotTime">New Slot Time</label>
-                      <input type="text" id="newSlotTime" name="newSlotTime" />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="newSlotDays">New Slot Days</label>
-                      <input type="text" id="newSlotDays" name="newSlotDays" />
-                    </div>
-                    <button type="submit" className="update-slot-btn">
-                      Update Slot
-                    </button>
-                  </form>
+
+              {activeSlotsTab === "view-slots" && (
+                <div className="slots-list">
+                  <h3>My Slots</h3>
+                  {slots.length === 0 ? (
+                    <p>No slots available.</p>
+                  ) : (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Start Time</th>
+                          <th>End Time</th>
+                          <th>Capacity</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {slots.map((slot) => (
+                          <tr key={slot._id}>
+                            <td>{slot.date}</td>
+                            <td>{slot.startTime}</td>
+                            <td>{slot.endTime}</td>
+                            <td>{slot.capacity}</td>
+                            <td>
+                              <button
+                                className="btn delete-btn"
+                                onClick={() => handleDeleteSlot(slot._id)}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="created-slots">
-              <h3>Created Slots</h3>
-              {slots.length > 0 ? (
-                <ul>
-                  {slots.map((slot) => (
-                    <li key={slot._id}>
-                      {slot.startTime} - {slot.endTime} {slot.date}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No slots made yet.</p>
               )}
             </div>
           </div>

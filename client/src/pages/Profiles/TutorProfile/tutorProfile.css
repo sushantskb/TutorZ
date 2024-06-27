@@ -291,36 +291,17 @@
   gap: 20px;
 }
 
-.create-slot-form,
-.update-slot-form {
+.create-slot-form{
   flex: 1;
 }
 
-.create-slot-form h3,
-.update-slot-form h3 {
+.create-slot-form h3 {
   font-size: 24px;
   margin-bottom: 10px;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.create-slot-btn,
-.update-slot-btn {
+.create-slot-btn{
   background-color: #f1cb0c;
   color: white;
   border: none;
@@ -329,31 +310,61 @@
   font-size: 16px;
 }
 
-.create-slot-btn:hover,
-.update-slot-btn:hover {
+.create-slot-btn:hover {
   background-color: #f1cb0c;
 }
 
-.created-slots {
-  border-top: 1px solid #ccc;
-  padding-top: 20px;
+
+
+.slots-list {
+  margin-top: 2rem;
 }
 
-.created-slots h3 {
-  font-size: 24px;
-  margin-bottom: 10px;
+.slots-list h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.created-slots ul {
-  list-style-type: none;
-  padding: 0;
+.slots-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-bg1);
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.created-slots ul li {
-  margin-bottom: 10px;
-  font-size: 16px;
+.slots-list th,
+.slots-list td {
+  padding: 1rem;
+  text-align: center;
 }
 
-.created-slots ul li:last-child {
-  margin-bottom: 0;
+.slots-list th {
+  background-color: var(--color-bg2);
+  color: var(--color-white);
 }
+
+.slots-list td {
+  background-color: var(--color-bg2-alt);
+}
+
+.slots-list tbody tr:nth-child(even) {
+  background-color: var(--color-bg2);
+}
+
+.slots-list .btn {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.slots-list .btn:hover {
+  background-color: var(--color-danger-light);
+}
+
+
+

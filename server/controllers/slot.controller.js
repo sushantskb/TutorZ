@@ -43,57 +43,6 @@ exports.getSlot = async (req, res) => {
   }
 };
 
-// Fetch a Slot
-exports.getASlot = async (req, res) => {
-  try {
-    const slotId = req.params.id;
-    const teacherId = req.user._id;
-    const slot = await Slot.findOne({ _id: slotId, teacherId });
-
-    if (!slot) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Slot not Found" });
-    }
-
-    return res.status(200).json({ success: true, slot });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// Update a Slot
-exports.updateSlot = async (req, res) => {
-  try {
-    const { date, startTime, endTime, capacity, duration } = req.body;
-    const teacherId = req.user._id;
-    const slotId = req.params.id;
-
-    const slot = await Slot.findOneAndUpdate(
-      { _id: slotId, teacherId },
-      {
-        date,
-        startTime,
-        endTime,
-        capacity,
-        duration,
-      },
-      { new: true }
-    );
-
-    if (!slot) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Slot not Found" });
-    }
-
-    return res.status(200).json({ success: true, slot });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, error: error.message });
-  }
-};
 
 // Delete a Slot
 exports.deleteSlot = async (req, res) => {
