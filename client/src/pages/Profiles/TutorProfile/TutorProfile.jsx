@@ -124,6 +124,24 @@ const TutorProfile = () => {
     }
   };
 
+  const fetchPendingRequests = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/users/pending-requests`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setPendingRequests(res.data);
+    } catch (error) {
+      console.error("Error fetching students: ", error);
+    }
+  }
+
+  useEffect(()=>{
+    fetchPendingRequests();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.pendingRequests])
+
   const fetchStudents = async () => {
     try {
       const studentPromises = user.students.map(async (studentId) => {
