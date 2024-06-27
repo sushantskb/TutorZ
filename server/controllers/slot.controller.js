@@ -1,9 +1,9 @@
 const Slot = require("../models/slot.model");
-const { ObjectId } = require("mongodb")
+
 // Create a Slot
 exports.createSlot = async (req, res) => {
   try {
-    const { date, startTime, endTime, capacity, duration } = req.body;
+    const { date, startTime, endTime, capacity, duration, price } = req.body;
     const teacherId = req.user._id;
 
     const slot = new Slot({
@@ -13,6 +13,7 @@ exports.createSlot = async (req, res) => {
       endTime,
       capacity,
       duration,
+      price,
     });
 
     await slot.save();
@@ -31,7 +32,7 @@ exports.createSlot = async (req, res) => {
 exports.getSlot = async (req, res) => {
   try {
     const teacherId = req.params.teacherId;
-    const slots = await Slot.find({teacherId});
+    const slots = await Slot.find({ teacherId });
 
     return res.status(200).json({ success: true, slots });
   } catch (error) {
@@ -39,9 +40,6 @@ exports.getSlot = async (req, res) => {
     return res.status(500).json({ success: false, error: error.message });
   }
 };
-
-
-
 
 // Delete a Slot
 exports.deleteSlot = async (req, res) => {

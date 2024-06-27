@@ -31,6 +31,10 @@ const slotSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    price:{
+      type:String,
+      default:"Free"
+    }
   },
   { timestamps: true }
 );

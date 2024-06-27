@@ -31,6 +31,7 @@ exports.createBooking = async (req, res) => {
 
     const booking = new Booking({
       studentId,
+      teacherId: slot.teacherId,
       slotId,
       startTime: slot.startTime,
       endTime: slot.endTime,
@@ -52,7 +53,8 @@ exports.getBookingsByStudent = async (req, res) => {
   try {
     const studentId = req.params.id;
     const bookings = await Booking.find({ studentId, status: true }).populate(
-      "slotId"
+      "slotId",
+      "teacherId"
     );
     return res.status(200).json({ success: true, bookings });
   } catch (error) {

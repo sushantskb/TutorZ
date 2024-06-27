@@ -7,6 +7,10 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    teacherId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     slotId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Slot",

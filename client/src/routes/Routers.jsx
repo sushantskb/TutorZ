@@ -25,7 +25,7 @@ const Routers = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/contact" element=<ContactUs /> />
+      <Route path="/contact" element={<ContactUs />} />
       <Route
         path="/tutor/:tutorId"
         element={
