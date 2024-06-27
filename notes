@@ -1,9 +1,2 @@
-In the getSlots....getting a empty slot arrazy []
-Create Booking -> {
-    "success": false,
-    "error": "Booking validation failed: startTime: Cast to date failed for value \"10 a.m.\" (type string) at path \"startTime\", endTime: Cast to date failed for value \"12 p.m.\" (type string) at path \"endTime\""
-}
-
-
-Problem in create-slots
- "error": "Slot validation failed: date: Cast to date failed for value \"Invalid Date\" (type Date) at path \"date\", startTime: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startTime\", endTime: Cast to date failed for value \"Invalid Date\" (type Date) at path \"endTime\""
+Booking --> tutor Id add
+Slot Creation --> Price

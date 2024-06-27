@@ -1,5 +1,5 @@
 const Slot = require("../models/slot.model");
-
+const { ObjectId } = require("mongodb")
 // Create a Slot
 exports.createSlot = async (req, res) => {
   try {
@@ -30,11 +30,8 @@ exports.createSlot = async (req, res) => {
 // Fetch Slots of a teacher
 exports.getSlot = async (req, res) => {
   try {
-    const teacherId = req.user._id;
-
-    const slots = await Slot.find({
-      teacherId,
-    });
+    const teacherId = req.params.teacherId;
+    const slots = await Slot.find({teacherId});
 
     return res.status(200).json({ success: true, slots });
   } catch (error) {
@@ -42,6 +39,8 @@ exports.getSlot = async (req, res) => {
     return res.status(500).json({ success: false, error: error.message });
   }
 };
+
+
 
 
 // Delete a Slot

@@ -52,18 +52,6 @@ const UserSchema = new mongoose.Schema(
         ref: "User"
       }
     ],
-    bookedSlots: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Slot",
-      },
-    ],
-    booking: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Booking",
-      },
-    ],
   },
   {
     timestamps: true,

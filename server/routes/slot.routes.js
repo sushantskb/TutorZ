@@ -14,7 +14,7 @@ const {
 router.post("/create-slots", authenticate, createSlot);
 
 // Fetch Slots of a teacher
-router.get("/", authenticate, getSlot);
+router.get("/:teacherId", authenticate, getSlot);
 
 // Delete a Slot
 router.delete("/delete-slot/:id", authenticate, deleteSlot);

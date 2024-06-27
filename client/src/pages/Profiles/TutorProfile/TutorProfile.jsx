@@ -3,9 +3,11 @@ import { AuthContext } from "../../../components/Context/AuthContext";
 import "./tutorProfile.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const TutorProfile = () => {
   const { user, token, logout } = useContext(AuthContext);
+  const tutorId = useParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSlotsTab, setActiveSlotsTab] = useState("create-slot");
   const [assignedStudents, setAssignedStudents] = useState([]);
@@ -149,7 +151,7 @@ const TutorProfile = () => {
 
   const fetchSlots = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/slots", {
+      const response = await axios.get(`http://localhost:8000/api/slots/${tutorId.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
