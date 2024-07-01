@@ -36,6 +36,7 @@ exports.createBooking = async (req, res) => {
       startTime: slot.startTime,
       endTime: slot.endTime,
       duration: slot.duration,
+      date: slot.date,
     });
 
     booking.status = true;

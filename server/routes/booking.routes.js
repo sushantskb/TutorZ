@@ -11,7 +11,7 @@ const {
 router.post("/create-booking/:id", authenticate, createBooking);
 
 // Get bookings by student
-router.get("/student/:id", authenticate, getBookingsByStudent);
+router.get("/:id", authenticate, getBookingsByStudent);
 
 // Cancel a booking
 router.put("/cancel-booking/:id", authenticate, cancelBooking);
