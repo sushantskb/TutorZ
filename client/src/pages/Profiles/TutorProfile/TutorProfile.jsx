@@ -345,9 +345,6 @@ const TutorProfile = () => {
                 <strong>Phone:</strong> {user.phone}
               </p>
               <p>
-                <strong>Class:</strong> {user.class}
-              </p>
-              <p>
                 <strong>Gender:</strong> {user.gender}
               </p>
             </div>

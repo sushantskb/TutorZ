@@ -19,9 +19,7 @@ const SignUp = () => {
     subject: "",
     qualification: "",
     experience: "",
-    timeSlots: "",
     classesPerWeek: "",
-    fees: "",
     profileImage: null,
   });
 
@@ -83,9 +81,7 @@ const SignUp = () => {
           subject: formData.subject,
           qualification: formData.qualification,
           experience: formData.experience,
-          timeSlots: formData.timeSlots,
           classesPerWeek: formData.classesPerWeek,
-          fees: formData.fees,
         }),
       };
 
@@ -245,32 +241,12 @@ const SignUp = () => {
                 />
               </div>
               <div className="form-group half-width">
-                <label htmlFor="timeSlots">Time Slots</label>
-                <input
-                  type="text"
-                  id="timeSlots"
-                  name="timeSlots"
-                  value={formData.timeSlots}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group half-width">
                 <label htmlFor="classesPerWeek">Classes per Week</label>
                 <input
                   type="number"
                   id="classesPerWeek"
                   name="classesPerWeek"
                   value={formData.classesPerWeek}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group half-width">
-                <label htmlFor="fees">Fees</label>
-                <input
-                  type="number"
-                  id="fees"
-                  name="fees"
-                  value={formData.fees}
                   onChange={handleInputChange}
                 />
               </div>

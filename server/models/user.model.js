@@ -30,9 +30,7 @@ const UserSchema = new mongoose.Schema(
     subject: String, // For tutors
     qualification: String, // For tutors
     experience: String, // For tutors
-    timeSlots: String, // For tutors
     classesPerWeek: Number, // For tutor
-    fees: Number, // For tutor
     profileImage: String,
     tutors: [
       {
