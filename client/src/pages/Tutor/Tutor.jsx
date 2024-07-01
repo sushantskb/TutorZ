@@ -5,6 +5,7 @@ import axios from "axios";
 import { AuthContext } from "../../components/Context/AuthContext";
 import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
+import { convertToStandardDate } from "../../utils/dateFormater";
 
 const Tutor = () => {
   const { token } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const Tutor = () => {
   const [requestSent, setRequestSent] = useState(false);
   const [requestApproved, setRequestApproved] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [slots, setSlots] = useState([]);
   const [error, setError] = useState(null);
 
   const [feedback, setFeedBack] = useState({
@@ -80,10 +82,30 @@ const Tutor = () => {
       }
     };
 
+    const fetchSlots = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/slots/${tutorId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setSlots(response.data.slots);
+      } catch (error) {
+        setError(error);
+      }
+    };
+
     fetchTutorData();
     checkIfTutorAdded();
     fetchReviews();
+    fetchSlots();
   }, [tutorId, token]);
+
+  console.log("slots", slots);
 
   const handleRequestClick = async () => {
     try {
@@ -164,6 +186,7 @@ const Tutor = () => {
     );
 
   if (error) return <div>Error loading tutor data</div>;
+  console.log(error);
   return (
     <div className="tutor-detail-page">
       <div className="left-section">
@@ -221,9 +244,19 @@ const Tutor = () => {
       <div className="right-section">
         <div className="availability-card glass-effect">
           <h2>Availability</h2>
-          <p>Time Slots: Monday to Friday, 9AM - 5PM</p>
-          <p>No. of Classes per Week: 5</p>
-          <p>Fees per Month: $200</p>
+          {slots.length > 0 ? (
+            slots.map((slot) => (
+              <div key={slot._id}>
+                <p>Time {slot.duration} min</p>
+                <p>Date: {convertToStandardDate(slot.date)}</p>
+                <p>Start Time: {slot.startTime}</p>
+                <p>End Time: {slot.endTime}</p>
+                <p>Price: {slot.price}</p>
+              </div>
+            ))
+          ) : (
+            <p>No slots created</p>
+          )}
           <button
             className="btn"
             style={{ margin: "auto", marginTop: "12px", cursor: "pointer" }}

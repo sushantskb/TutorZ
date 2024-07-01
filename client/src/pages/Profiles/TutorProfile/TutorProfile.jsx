@@ -31,6 +31,7 @@ const TutorProfile = () => {
     endTime: "",
     capacity: 0,
     duration: 0,
+    price: 0,
   });
 
   // console.log("User: ", user);
@@ -617,6 +618,16 @@ const TutorProfile = () => {
                         id="duration"
                         name="duration"
                         value={slotFormData.duration}
+                        onChange={handleSlotInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="price">Price in Ruppes</label>
+                      <input
+                        type="text"
+                        id="Price"
+                        name="Price"
+                        value={slotFormData.Price}
                         onChange={handleSlotInputChange}
                       />
                     </div>
