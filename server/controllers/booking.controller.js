@@ -55,16 +55,28 @@ exports.createBooking = async (req, res) => {
 exports.getBookingsByStudent = async (req, res) => {
   try {
     const studentId = req.params.id;
-    const bookings = await Booking.find({ studentId, status: true }).populate(
-      "slotId",
-      "teacherId",
-      "subject"
-    );
+    const bookings = await Booking.find({ studentId, status: true });
 
-    const teacherData = await User.findById(bookings.teacherId).select(
-      "name profileImage"
-    );
-    return res.status(200).json({ success: true, bookings, teacherData });
+    if (bookings.length === 0) {
+      return res.status(404).json({ success: false, message: "No bookings found for this student" });
+    }
+
+    // Extract teacherIds from bookings
+    const teacherIds = bookings.map(booking => booking.teacherId);
+
+    // Fetch teacher data for all unique teacherIds
+    const teachers = await User.find({ _id: { $in: teacherIds } });
+
+    // Map teacher data to each booking
+    const bookingsWithData = bookings.map(booking => {
+      const teacherData = teachers.find(teacher => teacher._id.equals(booking.teacherId));
+      return {
+        booking,
+        teacherData: teacherData ? teacherData : null // Handle case where teacherData not found
+      };
+    });
+
+    return res.status(200).json({ success: true, bookings: bookingsWithData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, error: error.message });

@@ -5,10 +5,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const StudentProfile = () => {
-  const { user, token, logout } = useContext(AuthContext); // Removed isLoading from AuthContext
+  const { user, token, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("overview");
   const [assignedTutors, setAssignedTutors] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Local isLoading state
+  const [bookings, setBookings] = useState([]); // State for bookings
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user.name,
@@ -32,11 +33,10 @@ const StudentProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set isLoading to true when update process starts
+    setIsLoading(true);
     try {
       let profileImageUrl = user.profileImage;
 
-      // If there's a new profile image
       if (
         formData.profileImage &&
         formData.profileImage !== user.profileImage
@@ -67,7 +67,7 @@ const StudentProfile = () => {
       };
 
       const response = await axios.put(
-        "http://localhost:8000/api/users/profile/me",
+        `http://localhost:8000/api/users/profile/me`,
         updatedUser,
         {
           headers: {
@@ -77,18 +77,16 @@ const StudentProfile = () => {
       );
 
       console.log(response);
-      // Handle success
       toast.success("Updated successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
-      // Optionally, you can update the user context with the new data
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Error updating profile", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     } finally {
-      setIsLoading(false); // Set isLoading to false after update process ends
+      setIsLoading(false);
     }
   };
 
@@ -112,12 +110,21 @@ const StudentProfile = () => {
     }
   };
 
-  useEffect(() => {
-    if (user.tutors.length > 0) {
-      fetchTutors();
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/bookings/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setBookings(response.data.bookings); // Update state with bookings array
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.tutors]); // Execute whenever user.tutors change
+  };
 
   const handleRemoveTutor = async (tutorId) => {
     try {
@@ -141,6 +148,38 @@ const StudentProfile = () => {
       });
     }
   };
+
+  const handleCancelBooking = async (bookingId) => {
+    try {
+      await axios.put(
+        `http://localhost:8000/api/bookings/cancel-booking/${bookingId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success("Booking cancelled successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
+      fetchBookings();
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+      toast.error("Error cancelling booking", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user.tutors.length > 0) {
+      fetchTutors();
+    }
+    fetchBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.tutors]);
 
   return (
     <div className="profile-page">
@@ -167,10 +206,16 @@ const StudentProfile = () => {
           >
             Update
           </button>
+          <button
+            className={activeTab === "bookings" ? "active" : ""}
+            onClick={() => handleTabChange("bookings")}
+          >
+            My Bookings
+          </button>
         </div>
       </div>
       <div className="profile-content">
-        {activeTab === "overview" ? (
+        {activeTab === "overview" && (
           <div className="overview">
             <div className="profile-info">
               <h3>User Profile Information</h3>
@@ -226,7 +271,8 @@ const StudentProfile = () => {
               Logout
             </button>
           </div>
-        ) : (
+        )}
+        {activeTab === "update" && (
           <div className="update-form">
             <h3>Update Profile</h3>
             <form onSubmit={handleUpdateProfile}>
@@ -289,6 +335,47 @@ const StudentProfile = () => {
                 </button>
               )}
             </form>
+          </div>
+        )}
+        {activeTab === "bookings" && (
+          <div className="bookings-section">
+            <h3>My Bookings</h3>
+            <ul>
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <li key={booking._id} className="booking-card">
+                    <div className="booking-details">
+                      <div className="profile-pic">
+                        <img
+                          src={booking.teacherData.profileImage}
+                          alt="Tutor Profile"
+                        />
+                      </div>
+                      <div className="booking-info">
+                        <strong>{booking.teacherData.name}</strong>
+                        <p>
+                          <strong>Email:</strong> {booking.teacherData.email}
+                        </p>
+                        <p>
+                          <strong>Subject:</strong> {booking.teacherData.subject}
+                        </p>
+                        <p>
+                          <strong>Phone:</strong> {booking.teacherData.phone}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      className="cancel-btn"
+                      onClick={() => handleCancelBooking(booking._id)}
+                    >
+                      Cancel
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <li>No bookings found.</li>
+              )}
+            </ul>
           </div>
         )}
       </div>
