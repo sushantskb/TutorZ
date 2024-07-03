@@ -19,6 +19,10 @@ const slotSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    subject:{
+      type:String,
+      required:true,
+    },
     duration: {
       type: String,
       required: true,

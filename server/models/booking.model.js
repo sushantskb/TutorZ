@@ -24,6 +24,10 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    subject: {
+      type: String,
+      required: true,
+    },
     duration: {
       type: String,
       required: true,
@@ -33,8 +37,8 @@ const bookingSchema = new mongoose.Schema(
       default: false,
     },
     date: {
-      type: Date
-    }
+      type: Date,
+    },
     // totalPrice: {
     //   type: Number,
     //   required: true,

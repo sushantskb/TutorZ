@@ -3,7 +3,8 @@ const Slot = require("../models/slot.model");
 // Create a Slot
 exports.createSlot = async (req, res) => {
   try {
-    const { date, startTime, endTime, capacity, duration, price } = req.body;
+    const { date, startTime, endTime, subject, capacity, duration, price } =
+      req.body;
     const teacherId = req.user._id;
 
     const slot = new Slot({
@@ -11,6 +12,7 @@ exports.createSlot = async (req, res) => {
       date,
       startTime,
       endTime,
+      subject,
       capacity,
       duration,
       price,

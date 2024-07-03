@@ -1,5 +1,6 @@
 const Booking = require("../models/booking.model");
 const Slot = require("../models/slot.model");
+const User = require("../models/user.model");
 
 // Create a Booking
 exports.createBooking = async (req, res) => {
@@ -33,6 +34,7 @@ exports.createBooking = async (req, res) => {
       studentId,
       teacherId: slot.teacherId,
       slotId,
+      subject: slot.subject,
       startTime: slot.startTime,
       endTime: slot.endTime,
       duration: slot.duration,
@@ -55,9 +57,14 @@ exports.getBookingsByStudent = async (req, res) => {
     const studentId = req.params.id;
     const bookings = await Booking.find({ studentId, status: true }).populate(
       "slotId",
-      "teacherId"
+      "teacherId",
+      "subject"
     );
-    return res.status(200).json({ success: true, bookings });
+
+    const teacherData = await User.findById(bookings.teacherId).select(
+      "name profileImage"
+    );
+    return res.status(200).json({ success: true, bookings, teacherData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, error: error.message });
