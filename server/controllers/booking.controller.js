@@ -26,7 +26,7 @@ exports.createBooking = async (req, res) => {
     const booked = await Booking.findOne({ studentId });
     if (booked && booked.status) {
       return res
-        .status(200)
+        .status(409)
         .json({ success: false, message: "You have already booked this" });
     }
 
