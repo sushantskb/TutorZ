@@ -3,6 +3,7 @@ import { AuthContext } from "../../../components/Context/AuthContext";
 import "./studentProfile.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const StudentProfile = () => {
   const { user, token, logout } = useContext(AuthContext);
@@ -10,6 +11,8 @@ const StudentProfile = () => {
   const [assignedTutors, setAssignedTutors] = useState([]);
   const [bookings, setBookings] = useState([]); // State for bookings
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: user.name,
@@ -153,17 +156,18 @@ const StudentProfile = () => {
     try {
       await axios.put(
         `http://localhost:8000/api/bookings/cancel-booking/${bookingId}`,
-        null,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+      navigate(0);
       toast.success("Booking cancelled successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
+      
       fetchBookings();
     } catch (error) {
       console.error("Error cancelling booking:", error);
@@ -357,7 +361,8 @@ const StudentProfile = () => {
                           <strong>Email:</strong> {booking.teacherData.email}
                         </p>
                         <p>
-                          <strong>Subject:</strong> {booking.teacherData.subject}
+                          <strong>Subject:</strong>{" "}
+                          {booking.teacherData.subject}
                         </p>
                         <p>
                           <strong>Phone:</strong> {booking.teacherData.phone}
@@ -366,7 +371,7 @@ const StudentProfile = () => {
                     </div>
                     <button
                       className="cancel-btn"
-                      onClick={() => handleCancelBooking(booking._id)}
+                      onClick={() => handleCancelBooking(booking.booking._id)}
                     >
                       Cancel
                     </button>

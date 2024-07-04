@@ -1,4 +1,4 @@
-// src/context/AuthContext.js
+/* eslint-disable react/prop-types */
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,11 +6,10 @@ import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -21,8 +20,16 @@ const AuthProvider = ({ children }) => {
         .get("http://localhost:8000/api/auth/verify", {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then((response) => setUser(response.data.user))
-        .catch(() => logout());
+        .then((response) => {
+          setUser(response.data.user);
+          setLoading(false);
+        })
+        .catch(() => {
+          logout();
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -70,7 +77,7 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     navigate("/login");
-    toast.success("Logged Out", {style: {background: "rgb(46, 47, 42)", color: "white"}})
+    toast.success("Logged Out", {style: {background: "rgb(46, 47, 42)", color: "white"}});
   };
 
   return (
