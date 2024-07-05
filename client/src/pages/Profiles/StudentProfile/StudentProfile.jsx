@@ -128,6 +128,7 @@ const StudentProfile = () => {
       console.error("Error fetching bookings:", error);
     }
   };
+  console.log(bookings);
 
   const handleRemoveTutor = async (tutorId) => {
     try {
@@ -167,7 +168,7 @@ const StudentProfile = () => {
       toast.success("Booking cancelled successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
-      
+
       fetchBookings();
     } catch (error) {
       console.error("Error cancelling booking:", error);
@@ -344,43 +345,24 @@ const StudentProfile = () => {
         {activeTab === "bookings" && (
           <div className="bookings-section">
             <h3>My Bookings</h3>
-            <ul>
+            <div className="card-container">
               {bookings.length > 0 ? (
                 bookings.map((booking) => (
-                  <li key={booking._id} className="booking-card">
-                    <div className="booking-details">
-                      <div className="profile-pic">
-                        <img
-                          src={booking.teacherData.profileImage}
-                          alt="Tutor Profile"
-                        />
-                      </div>
-                      <div className="booking-info">
-                        <strong>{booking.teacherData.name}</strong>
-                        <p>
-                          <strong>Email:</strong> {booking.teacherData.email}
-                        </p>
-                        <p>
-                          <strong>Subject:</strong>{" "}
-                          {booking.teacherData.subject}
-                        </p>
-                        <p>
-                          <strong>Phone:</strong> {booking.teacherData.phone}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      className="cancel-btn"
-                      onClick={() => handleCancelBooking(booking.booking._id)}
-                    >
-                      Cancel
-                    </button>
-                  </li>
-                ))
-              ) : (
-                <li>No bookings found.</li>
-              )}
-            </ul>
+                  <div className="card" key={booking.slotInfo.teacherId}>
+                <div className="card-header">
+                  <h3 className="card-title"><img src={booking.teacherInfo.profileImage} /></h3>
+                </div>
+                <div className="card-content">
+                  <p className="card-name">{booking.teacherInfo.name}</p>
+                </div>
+                <div className="card-footer">
+                  <button className="card-button" onClick={() => handleCancelBooking(booking._id)}>Delete</button>
+                </div>
+              </div>
+                ))): (<p>no bookings</p>)}
+              
+            </div>
+            
           </div>
         )}
       </div>
