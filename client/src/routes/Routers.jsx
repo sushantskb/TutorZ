@@ -10,6 +10,8 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import ContactUs from "../pages/Contact/ContactUs";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import Success from "../pages/SuccessPage/Success";
+import Error from "../pages/ErrorPage/Error";
 
 const Routers = () => {
   return (
@@ -52,6 +54,8 @@ const Routers = () => {
       />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/success" element={<Success />} />
+      <Route path="/cancel" element={<Error />} />
       <Route path="/*" element={<NotFound_404 />} />
     </Routes>
   );

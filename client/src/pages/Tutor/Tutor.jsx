@@ -6,6 +6,7 @@ import { AuthContext } from "../../components/Context/AuthContext";
 import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 import { convertToStandardDate } from "../../utils/dateFormater";
+import { loadStripe } from "@stripe/stripe-js"
 
 const Tutor = () => {
   const { token } = useContext(AuthContext);
@@ -24,6 +25,8 @@ const Tutor = () => {
     content: "",
     rating: 0,
   });
+
+  const stripePromise = loadStripe("pk_test_51LzMEFSJq4Xt4Ij1ZehWoRdyloP8zf8fTyVDFibGPQuyE9KLKfG8w3lHbsawCHph5aeoYczbhPAHEnUzA3zjcByv00UZvJ2LBI")
 
   useEffect(() => {
     const fetchTutorData = async () => {
@@ -128,11 +131,10 @@ const Tutor = () => {
   };
 
   const handleBookDemo = async (slotId) => {
-    // Handle booking demo logic here
     setIsLoading(true);
     try {
-      const resp = await axios.post(
-        `http://localhost:8000/api/bookings/create-booking/${slotId}`,
+      const response = await axios.post(
+        `http://localhost:8000/api/bookings/create-checkout-session/${slotId}`,
         {},
         {
           headers: {
@@ -141,18 +143,19 @@ const Tutor = () => {
         }
       );
 
-      if (resp.status === 201) {
-        toast.success("Booked Successfully", {
-          style: { background: "rgb(57, 57, 57)", color: "white" },
-        });
-      } 
+      const { sessionId } = response.data;
+
+      // Redirect to Stripe Checkout
+      const stripe = await stripePromise;
+      await stripe.redirectToCheckout({ sessionId });
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message, {
+      toast.error("Failed to create checkout session.", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 

@@ -8,7 +8,8 @@ const {
 } = require("../controllers/booking.controller");
 
 // Create a Booking
-router.post("/create-booking/:id", authenticate, createBooking);
+router.post("/create-checkout-session/:id", authenticate, createBooking);
+
 
 // Get bookings by student
 router.get("/:id", authenticate, getBookingsByStudent);

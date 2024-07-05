@@ -1,6 +1,7 @@
 const Booking = require("../models/booking.model");
 const Slot = require("../models/slot.model");
 const User = require("../models/user.model");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Create a Booking
 exports.createBooking = async (req, res) => {
@@ -8,12 +9,18 @@ exports.createBooking = async (req, res) => {
     const slotId = req.params.id;
     const studentId = req.user._id;
 
-    const slot = await Slot.findById(slotId);
-
+    const slot = await Slot.findById(slotId).populate("teacherId");
     if (!slot) {
       return res
         .status(404)
         .json({ success: false, message: "Slot Not Found" });
+    }
+
+    const tutor = slot.teacherId;
+    if (!tutor) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Tutor Not Found" });
     }
 
     const bookingCount = await Booking.countDocuments({ slotId });
@@ -23,28 +30,41 @@ exports.createBooking = async (req, res) => {
         .json({ success: false, message: "Slot is fully booked" });
     }
 
-    const booked = await Booking.findOne({ studentId });
-    if (booked && booked.status) {
+    const existingBooking = await Booking.findOne({ studentId, slotId });
+    if (existingBooking) {
       return res
         .status(409)
-        .json({ success: false, message: "You have already booked this" });
+        .json({ success: false, message: "You have already booked this slot" });
     }
 
-    const booking = new Booking({
-      studentId,
-      teacherId: slot.teacherId,
-      slotId,
-      subject: slot.subject,
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      duration: slot.duration,
-      date: slot.date,
+    // Create a Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: "Demo Booking",
+              images: [tutor.profileImage],
+            },
+            unit_amount: slot.price * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: "http://localhost:5173/success", // Adjust according to your client-side success URL
+      cancel_url: "http://localhost:5173/cancel", // Adjust according to your client-side cancel URL
+      client_reference_id: slotId,
+      metadata: {
+        studentId: studentId.toString(),
+        tutorId: tutor._id.toString(),
+      },
     });
 
-    booking.status = true;
 
-    await booking.save();
-    return res.status(201).json({ success: true, booking });
+    return res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, error: error.message });
