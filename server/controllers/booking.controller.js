@@ -79,7 +79,7 @@ exports.getBookingsByStudent = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "slotInfo.teachedId",
+          localField: "slotInfo.teacherId",
           foreignField: "_id",
           as: "teacherInfo",
         },
