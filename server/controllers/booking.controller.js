@@ -1,6 +1,6 @@
+const mongoose = require("mongoose");
 const Booking = require("../models/booking.model");
 const Slot = require("../models/slot.model");
-const User = require("../models/user.model");
 
 // Create a Booking
 exports.createBooking = async (req, res) => {
@@ -54,11 +54,10 @@ exports.createBooking = async (req, res) => {
 // Get bookings by student
 exports.getBookingsByStudent = async (req, res) => {
   try {
-    const studentId = req.params.id;
     const bookings = await Booking.aggregate([
       {
         $match: {
-          studentId,
+          studentId: new mongoose.Types.ObjectId(req.params.id),
           status: true,
         },
       },
