@@ -1,6 +1,6 @@
+const mongoose = require("mongoose");
 const Booking = require("../models/booking.model");
 const Slot = require("../models/slot.model");
-const User = require("../models/user.model");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Create a Booking
@@ -74,11 +74,10 @@ exports.createBooking = async (req, res) => {
 // Get bookings by student
 exports.getBookingsByStudent = async (req, res) => {
   try {
-    const studentId = req.params.id;
     const bookings = await Booking.aggregate([
       {
         $match: {
-          studentId,
+          studentId: new mongoose.Types.ObjectId(req.params.id),
           status: true,
         },
       },
@@ -99,7 +98,7 @@ exports.getBookingsByStudent = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "slotInfo.teachedId",
+          localField: "slotInfo.teacherId",
           foreignField: "_id",
           as: "teacherInfo",
         },
