@@ -10,6 +10,7 @@ const reviewRoutes = require("./routes/review.routes");
 const slotRoutes = require("./routes/slot.routes");
 const bookingRoutes = require("./routes/booking.routes");
 const webhookRoutes = require("./routes/webhooks.routes");
+const assignmentsRoutes = require("./routes/assignment.routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -34,6 +35,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/slots", slotRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/assignments", assignmentsRoutes);
 
 connDB();
 app.listen(PORT, () => {
