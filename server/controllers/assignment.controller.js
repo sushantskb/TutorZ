@@ -49,14 +49,15 @@ exports.getAssignments = async (req, res) => {
     let assignments;
 
     if (req.user.role === "tutor") {
-      assignments = await Assignment.find({ tutor: userId }).populate(
-        "student",
-        "fullname"
-      );
+      assignments = await Assignment.find({ tutor: userId }).populate({
+        path: "student",
+        select: "name profileImage",
+      });
     } else if (req.user.role === "student") {
-      assignments = await Assignment.find({
-        student: userId,
-      }).populate("tutor", "fullname");
+      assignments = await Assignment.find({ student: userId }).populate({
+        path: "tutor",
+        select: "name profileImage",
+      });
     }
 
     return res.status(200).json(assignments);
@@ -107,7 +108,7 @@ exports.submitAssignment = async (req, res) => {
     if (assignment.student.toString() === studentId) {
       assignment.submission = submissionUrl;
     } else {
-        throw new Error("You are not assigned this assignment")
+      throw new Error("You are not assigned this assignment");
     }
 
     await assignment.save();

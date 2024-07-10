@@ -34,6 +34,16 @@ const TutorProfile = () => {
     price: 0,
   });
 
+  const [assignmentData, setAssignmentData] = useState({
+    name: "",
+    pdfUrl: "",
+    student: "",
+  });
+
+  const [assignments, setAssignments] = useState([]);
+
+  const [status, setStatus] = useState("");
+
   // console.log("User: ", user);
 
   const handleTabChange = (tab) => {
@@ -127,21 +137,24 @@ const TutorProfile = () => {
 
   const fetchPendingRequests = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/users/pending-requests`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const res = await axios.get(
+        `http://localhost:8000/api/users/pending-requests`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       setPendingRequests(res.data);
     } catch (error) {
       console.error("Error fetching students: ", error);
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchPendingRequests();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.pendingRequests])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.pendingRequests]);
 
   const fetchStudents = async () => {
     try {
@@ -170,11 +183,14 @@ const TutorProfile = () => {
 
   const fetchSlots = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/slots/${tutorId.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://localhost:8000/api/slots/${tutorId.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const formattedSlots = response.data.slots.map((slot) => ({
         ...slot,
@@ -192,6 +208,29 @@ const TutorProfile = () => {
 
   useEffect(() => {
     fetchSlots();
+  }, []);
+
+  const fetchAssignements = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/assignments/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      setAssignments(response.data);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignements();
   }, []);
 
   const handleApproveRequest = async (studentId) => {
@@ -267,11 +306,14 @@ const TutorProfile = () => {
 
   const handleDeleteSlot = async (slotId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/slots/delete-slot/${slotId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `http://localhost:8000/api/slots/delete-slot/${slotId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Slot Deleted", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -281,6 +323,99 @@ const TutorProfile = () => {
       toast.error("Error in deleting slot", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
+    }
+  };
+
+  const handleAssignmentChange = (e) => {
+    const { name, value, files } = e.target;
+    setAssignmentData({
+      ...assignmentData,
+      [name]: files ? files[0] : value,
+    });
+  };
+
+  const handleAssignmentSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const file = assignmentData.pdfUrl; // Ensure assignmentData.pdfUrl is set correctly as the file object
+    const pdf = new FormData();
+    pdf.append("file", file);
+    pdf.append("upload_preset", "tutorz");
+    pdf.append("cloud_name", "dbgght6ld");
+
+    try {
+      // Upload file to Cloudinary
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dbgght6ld/upload",
+        {
+          method: "POST",
+          body: pdf,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error uploading file to Cloudinary");
+      }
+
+      const result = await response.json();
+      const uploadedPdfUrl = result.secure_url;
+
+      // Update assignmentData with the Cloudinary URL
+      setAssignmentData({
+        ...assignmentData,
+        pdfUrl: uploadedPdfUrl,
+      });
+
+      const res = await axios.post(
+        "http://localhost:8000/api/assignments/create",
+        {
+          ...assignmentData,
+          pdfUrl: uploadedPdfUrl, // Ensure pdfUrl is the string URL after uploading
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownload = async (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    (link.download = ""), document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleStatusChange = (assignmentId, newStatus) => {
+    setStatus((prevStatus) => ({ ...prevStatus, [assignmentId]: newStatus }));
+    handleUpdateStatus(assignmentId, newStatus)
+  };
+
+  const handleUpdateStatus = async (assignmentId, status) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8000/api/assignments/status/${assignmentId}`,
+        {status},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -379,18 +514,19 @@ const TutorProfile = () => {
         {activeTab === "create-assignment" && (
           <div className="create-assignment">
             <h3>Create Assignment</h3>
-            <form className="create-assignment-form">
+            <form
+              className="create-assignment-form"
+              onSubmit={handleAssignmentSubmit}
+            >
               <div className="form-group">
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="status">Status</label>
-                <select id="status" name="status">
-                  <option value="in-progress">In Progress</option>
-                  <option value="not-started">Not Started</option>
-                  <option value="completed">Completed</option>
-                </select>
+                <input
+                  type="text"
+                  id="title"
+                  name="name"
+                  value={assignmentData.name}
+                  onChange={handleAssignmentChange}
+                />
               </div>
 
               <div className="form-group">
@@ -401,41 +537,60 @@ const TutorProfile = () => {
                 <input
                   type="file"
                   id="assignmentFile"
-                  name="assignmentFile"
+                  name="pdfUrl"
                   className="custom-file-upload"
+                  onChange={handleAssignmentChange}
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="student">Student</label>
-                <select id="student" name="student">
-                  <option value="john-doe">John Doe</option>
-                  <option value="jane-smith">Jane Smith</option>
-                  <option value="bob-johnson">Bob Johnson</option>
+                <select
+                  id="student"
+                  name="student"
+                  value={assignmentData.student}
+                  onChange={handleAssignmentChange}
+                >
+                  <option value="">Select a student</option>
+                  {assignedStudents.map((student) => (
+                    <option key={student._id} value={student._id}>
+                      {student.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <button type="submit" className="create-assignment-btn">
                 Create
               </button>
             </form>
+
             <div className="assignments-list">
               <h3>Assignments</h3>
               <ul>
-                <li>
-                  John Doe - Assignment 1
-                  <button className="update-status-btn">Update Status</button>
-                  <button className="view-submits-btn">View Submits</button>
-                </li>
-                <li>
-                  Jane Smith - Assignment 2
-                  <button className="update-status-btn">Update Status</button>
-                  <button className="view-submits-btn">View Submits</button>
-                </li>
-                <li>
-                  Bob Johnson - Assignment 3
-                  <button className="update-status-btn">Update Status</button>
-                  <button className="view-submits-btn">View Submits</button>
-                </li>
+                {assignments.map((assignment) => (
+                  <li key={assignment._id}>
+                    {assignment.student.name} - {assignment.name}
+                    <select
+                      className="update-status-select"
+                      value={status[assignment._id] || assignment.status}
+                      onChange={(e) =>
+                        handleStatusChange(assignment._id, e.target.value)
+                      }
+                    >
+                      <option value={assignment.status}>
+                        {assignment.status}
+                      </option>
+                      <option value="in progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                    <button
+                      className="view-submits-btn"
+                      onClick={() => handleDownload(assignment.submission)}
+                    >
+                      View Submits
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

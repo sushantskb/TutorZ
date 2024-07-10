@@ -16,11 +16,11 @@ const assignmentSchema = new mongoose.Schema(
     },
     tutor: {
       type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: true,
+      ref: "User"
     },
     student: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     },
 
     submission: {

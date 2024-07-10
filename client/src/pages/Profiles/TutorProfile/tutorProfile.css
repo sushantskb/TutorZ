@@ -367,4 +367,30 @@
 }
 
 
+.update-status-select {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #9b9892;
+  transition: all 0.3s ease;
+}
 
+.update-status-select:hover {
+  border-color: #007bff;
+}
+
+.update-status-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.update-status-select option {
+  padding: 10px;
+  background-color: #9b9892;
+  color: #333;
+}
+
+.update-status-select option:hover {
+  background-color: #007bff;
+  color: #fff;
+}
