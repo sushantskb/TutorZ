@@ -263,15 +263,6 @@ const StudentProfile = () => {
                 )}
               </ul>
             </div>
-            <div className="assignments-section">
-              <h3>Assignments</h3>
-              <ul>
-                <li>Assignment 1 - Completed</li>
-                <li>Assignment 2 - In Progress</li>
-                <li>Assignment 3 - Not Started</li>
-                {/* Add more assignments here */}
-              </ul>
-            </div>
             <button className="logout-btn" onClick={logout}>
               Logout
             </button>
@@ -349,20 +340,28 @@ const StudentProfile = () => {
               {bookings.length > 0 ? (
                 bookings.map((booking) => (
                   <div className="card" key={booking.slotInfo.teacherId}>
-                <div className="card-header">
-                  <h3 className="card-title"><img src={booking.teacherInfo.profileImage} /></h3>
-                </div>
-                <div className="card-content">
-                  <p className="card-name">{booking.teacherInfo.name}</p>
-                </div>
-                <div className="card-footer">
-                  <button className="card-button" onClick={() => handleCancelBooking(booking._id)}>Delete</button>
-                </div>
-              </div>
-                ))): (<p>no bookings</p>)}
-              
+                    <div className="card-header">
+                      <h3 className="card-title">
+                        <img src={booking.teacherInfo.profileImage} />
+                      </h3>
+                    </div>
+                    <div className="card-content">
+                      <p className="card-name">{booking.teacherInfo.name}</p>
+                    </div>
+                    <div className="card-footer">
+                      <button
+                        className="card-button"
+                        onClick={() => handleCancelBooking(booking._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>no bookings</p>
+              )}
             </div>
-            
           </div>
         )}
       </div>
