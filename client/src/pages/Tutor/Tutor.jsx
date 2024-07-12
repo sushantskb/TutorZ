@@ -32,7 +32,7 @@ const Tutor = () => {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/users/tutor/${tutorId}`,
+          `/api/users/tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const Tutor = () => {
     const checkIfTutorAdded = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/users/check-tutor/${tutorId}`,
+          `/api/users/check-tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ const Tutor = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/reviews/all-reviews/${tutorId}`,
+          `/api/reviews/all-reviews/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ const Tutor = () => {
     const fetchSlots = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/slots/${tutorId}`,
+          `/api/slots/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ const Tutor = () => {
   const handleRequestClick = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/users/add-tutor/${tutorId}`,
+        `/api/users/add-tutor/${tutorId}`,
         {},
         {
           headers: {
@@ -134,7 +134,7 @@ const Tutor = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/bookings/create-checkout-session/${slotId}`,
+        `/api/bookings/create-checkout-session/${slotId}`,
         {},
         {
           headers: {
@@ -171,7 +171,7 @@ const Tutor = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/reviews/create-review/${tutorId}`,
+        `/api/reviews/create-review/${tutorId}`,
         feedback,
         {
           headers: {

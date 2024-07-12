@@ -70,7 +70,7 @@ const StudentProfile = () => {
       };
 
       const response = await axios.put(
-        `http://localhost:8000/api/users/profile/me`,
+        `/api/users/profile/me`,
         updatedUser,
         {
           headers: {
@@ -97,7 +97,7 @@ const StudentProfile = () => {
     try {
       const tutorPromises = user.tutors.map(async (tutorId) => {
         const response = await axios.get(
-          `http://localhost:8000/api/users/assigned-users/${tutorId}`,
+          `/api/users/assigned-users/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -116,7 +116,7 @@ const StudentProfile = () => {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/bookings/${user._id}`,
+        `/api/bookings/${user._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ const StudentProfile = () => {
   const handleRemoveTutor = async (tutorId) => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/users/remove-user/${tutorId}`,
+        `/api/users/remove-user/${tutorId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -156,7 +156,7 @@ const StudentProfile = () => {
   const handleCancelBooking = async (bookingId) => {
     try {
       await axios.put(
-        `http://localhost:8000/api/bookings/cancel-booking/${bookingId}`,
+        `/api/bookings/cancel-booking/${bookingId}`,
         {},
         {
           headers: {

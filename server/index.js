@@ -10,7 +10,7 @@ const slotRoutes = require("./routes/slot.routes");
 const bookingRoutes = require("./routes/booking.routes");
 const webhookRoutes = require("./routes/webhooks.routes");
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 6969;
 
 app.get("/", (req, res) => {
   res.send("<h1>Your app is healthy and running fine</h1>");

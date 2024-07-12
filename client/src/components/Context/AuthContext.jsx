@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
     if (token) {
       // Fetch user data from API to verify token
       axios
-        .get("http://localhost:8000/api/auth/verify", {
+        .get("/api/auth/verify", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/login",
+        "/api/auth/login",
         formData
       );
       setToken(response.data.token);
@@ -58,7 +58,7 @@ const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/signup",
+        "/api/auth/signup",
         formData
       );
       setToken(response.data.token);

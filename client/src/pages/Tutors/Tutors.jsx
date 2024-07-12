@@ -11,7 +11,7 @@ const Tutors = () => {
   const [tutors, setTutors] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/users", {
+      const response = await axios.get("/api/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -100,7 +100,7 @@ const TutorProfile = () => {
       };
 
       const response = await axios.put(
-        "http://localhost:8000/api/users/profile/me",
+        "/api/users/profile/me",
         updatedUser,
         {
           headers: {
@@ -128,7 +128,7 @@ const TutorProfile = () => {
   const fetchPendingRequests = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/users/pending-requests`,
+        `/api/users/pending-requests`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -150,7 +150,7 @@ const TutorProfile = () => {
     try {
       const studentPromises = user.students.map(async (studentId) => {
         const response = await axios.get(
-          `http://localhost:8000/api/users/assigned-users/${studentId}`,
+          `/api/users/assigned-users/${studentId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -174,7 +174,7 @@ const TutorProfile = () => {
   const fetchSlots = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/slots/${tutorId.id}`,
+        `/api/slots/${tutorId.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -203,7 +203,7 @@ const TutorProfile = () => {
   const handleApproveRequest = async (studentId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/users/approve-tutor/${studentId}`,
+        `/api/users/approve-tutor/${studentId}`,
         {},
         {
           headers: {
@@ -227,7 +227,7 @@ const TutorProfile = () => {
   const handleRemoveStudent = async (studentId) => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/users/remove-user/${studentId}`,
+        `/api/users/remove-user/${studentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -253,7 +253,7 @@ const TutorProfile = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/slots/create-slots",
+        "/api/slots/create-slots",
         slotFormData,
         {
           headers: {
@@ -274,7 +274,7 @@ const TutorProfile = () => {
   const handleDeleteSlot = async (slotId) => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/slots/delete-slot/${slotId}`,
+        `/api/slots/delete-slot/${slotId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
