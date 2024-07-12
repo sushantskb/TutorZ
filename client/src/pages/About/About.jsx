@@ -1,11 +1,12 @@
 import "./about.css";
-import {aboutUs} from "../../data/aboutUs";
+import { aboutUs } from "../../data/aboutUs";
 import AboutCard from "../../components/AboutCard/AboutCard";
+
 const About = () => {
   return (
     <section className="team">
       <h2>Meet Our Team</h2>
-      <div className="contianer team_container">
+      <div className="container team_container">
         {aboutUs.map((about) => (
           <AboutCard
             key={about.id}

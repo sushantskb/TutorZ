@@ -54,7 +54,9 @@ const Footer = () => {
       </div>
       <div className="footer_copyright">
         <small>Copyright &copy; TutorZ</small>
+        <small style={{display: "flex", justifyContent: "center", textAlign: "center"}}>SKB Creations</small>
       </div>
+        
     </footer>
   )
 }
