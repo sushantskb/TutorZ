@@ -5,7 +5,7 @@ const Footer = () => {
       <div className="container footer_container">
         <div className="footer_1">
           <a href="index.html" className="footer_logo"><h4>TutorZ</h4></a>
-          <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique ab assumenda numquam.</p>
+          <p>A new gen platform to find your desired teacher from your own surroundings.</p>
         </div>
 
         <div className="footer_2">
@@ -32,8 +32,8 @@ const Footer = () => {
         <div className="footer_4">
           <h4>Contact Us</h4>
           <div>
-            <p>+12 345 6900</p>
-            <p>whoami@gmail.com</p>
+            <p>+91 9439427124</p>
+            <p>sushantbishoi.developer@gmail.com</p>
           </div>
 
           <ul className="footer_socials">
@@ -54,7 +54,9 @@ const Footer = () => {
       </div>
       <div className="footer_copyright">
         <small>Copyright &copy; TutorZ</small>
+        <small style={{display: "flex", justifyContent: "center", textAlign: "center"}}>SKB Creations</small>
       </div>
+        
     </footer>
   )
 }

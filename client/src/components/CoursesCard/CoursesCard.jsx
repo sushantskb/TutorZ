@@ -11,7 +11,7 @@ const CoursesCard = ({title, image, description}) => {
         <p>
           {description}
         </p>
-        <a href="courses.html" className="btn btn-primary">
+        <a href="/tutors" className="btn btn-primary">
           Learn More
         </a>
       </div>

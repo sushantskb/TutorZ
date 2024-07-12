@@ -1,0 +1,60 @@
+@keyframes glitter {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes celebrate {
+    0% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-10px);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    75% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .celebration {
+    animation: celebrate 1s ease-in-out;
+  }
+  
+  .glitter {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: var(--color-danger);
+    border-radius: 50%;
+    opacity: 0;
+    animation: glitter 1.5s infinite ease-in-out;
+  }
+  
+  .glitter-container {
+    position: relative;
+  }
+  
+  .glitter-container::before,
+  .glitter-container::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: var(--color-bg);
+    z-index: -1;
+  }
+  
