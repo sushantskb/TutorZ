@@ -35,7 +35,7 @@ const Tutor = () => {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `{API_URL}/api/users/tutor/${tutorId}`,
+          `${API_URL}/api/users/tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const Tutor = () => {
     const checkIfTutorAdded = async () => {
       try {
         const response = await axios.get(
-          `{API_URL}/api/users/check-tutor/${tutorId}`,
+          `${API_URL}/api/users/check-tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ const Tutor = () => {
           setRequestApproved(true);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error checking if tutor added:", error);
         setError(error);
       }
     };
@@ -75,7 +75,7 @@ const Tutor = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `{API_URL}/api/reviews/all-reviews/${tutorId}`,
+          `${API_URL}/api/reviews/all-reviews/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -85,6 +85,7 @@ const Tutor = () => {
 
         setReviews(response.data.reviews);
       } catch (error) {
+        console.error("Error fetching reviews:", error);
         setError(error);
       }
     };
@@ -99,6 +100,7 @@ const Tutor = () => {
 
         setSlots(response.data.slots);
       } catch (error) {
+        console.error("Error fetching slots:", error);
         setError(error);
       }
     };
@@ -125,7 +127,7 @@ const Tutor = () => {
         setRequestSent(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error adding tutor:", error);
       setError(error);
     }
   };
@@ -151,7 +153,7 @@ const Tutor = () => {
 
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error creating checkout session:", error);
       toast.error("Failed to create checkout session.", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -171,7 +173,7 @@ const Tutor = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `/${API_URL}api/reviews/create-review/${tutorId}`,
+        `${API_URL}/api/reviews/create-review/${tutorId}`,
         feedback,
         {
           headers: {
@@ -192,6 +194,7 @@ const Tutor = () => {
         });
       }
     } catch (error) {
+      console.error("Error submitting feedback:", error);
       setError(error);
     }
   };
@@ -212,7 +215,10 @@ const Tutor = () => {
 
   if (loading) return <Loader />;
 
-  if (error) return <div>Error loading tutor data</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error loading tutor data</div>;
+  }
 
   return (
     <div className="tutor-detail-page">
@@ -255,7 +261,8 @@ const Tutor = () => {
             reviews.map((review) => (
               <div className="comment" key={review.id}>
                 <p>
-                  <strong>{review.studentId.name}:</strong> {review.content}
+                  <strong>{review.studentId?.name || "Anonymous"}:</strong>{" "}
+                  {review.content}
                 </p>
                 <div className="stars">
                   {"★".repeat(review.rating)}
@@ -274,6 +281,7 @@ const Tutor = () => {
           {slots.length > 0 ? (
             slots.map((slot) => (
               <div key={slot._id} className="slot-card">
+                {/* Render slot details */}
                 <p>Time: {slot.duration} min</p>
                 <p>Date: {convertToStandardDate(slot.date)}</p>
                 <p>Start Time: {slot.startTime}</p>
@@ -296,6 +304,7 @@ const Tutor = () => {
             <p>No slots created</p>
           )}
         </div>
+
         <div className="feedback-form glass-effect">
           <h2>Submit Feedback</h2>
           <form onSubmit={handleFeedbackSubmit}>
