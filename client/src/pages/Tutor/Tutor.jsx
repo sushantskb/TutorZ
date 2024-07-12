@@ -6,7 +6,7 @@ import { AuthContext } from "../../components/Context/AuthContext";
 import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 import { convertToStandardDate } from "../../utils/dateFormater";
-import { loadStripe } from "@stripe/stripe-js"
+import { loadStripe } from "@stripe/stripe-js";
 
 const Tutor = () => {
   const { token } = useContext(AuthContext);
@@ -26,13 +26,16 @@ const Tutor = () => {
     rating: 0,
   });
 
-  const stripePromise = loadStripe("pk_test_51LzMEFSJq4Xt4Ij1ZehWoRdyloP8zf8fTyVDFibGPQuyE9KLKfG8w3lHbsawCHph5aeoYczbhPAHEnUzA3zjcByv00UZvJ2LBI")
+  const stripePromise = loadStripe(
+    "pk_test_51LzMEFSJq4Xt4Ij1ZehWoRdyloP8zf8fTyVDFibGPQuyE9KLKfG8w3lHbsawCHph5aeoYczbhPAHEnUzA3zjcByv00UZvJ2LBI"
+  );
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `/api/users/tutor/${tutorId}`,
+          `{API_URL}/api/users/tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,7 +54,7 @@ const Tutor = () => {
     const checkIfTutorAdded = async () => {
       try {
         const response = await axios.get(
-          `/api/users/check-tutor/${tutorId}`,
+          `{API_URL}/api/users/check-tutor/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -72,7 +75,7 @@ const Tutor = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `/api/reviews/all-reviews/${tutorId}`,
+          `{API_URL}/api/reviews/all-reviews/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -88,14 +91,11 @@ const Tutor = () => {
 
     const fetchSlots = async () => {
       try {
-        const response = await axios.get(
-          `/api/slots/${tutorId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/api/slots/${tutorId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setSlots(response.data.slots);
       } catch (error) {
@@ -112,7 +112,7 @@ const Tutor = () => {
   const handleRequestClick = async () => {
     try {
       const response = await axios.post(
-        `/api/users/add-tutor/${tutorId}`,
+        `${API_URL}/api/users/add-tutor/${tutorId}`,
         {},
         {
           headers: {
@@ -134,7 +134,7 @@ const Tutor = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `/api/bookings/create-checkout-session/${slotId}`,
+        `${API_URL}/api/bookings/create-checkout-session/${slotId}`,
         {},
         {
           headers: {
@@ -171,7 +171,7 @@ const Tutor = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `/api/reviews/create-review/${tutorId}`,
+        `/${API_URL}api/reviews/create-review/${tutorId}`,
         feedback,
         {
           headers: {

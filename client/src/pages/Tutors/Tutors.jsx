@@ -9,9 +9,11 @@ const Tutors = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true)
   const [tutors, setTutors] = useState([]);
+const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/users", {
+      const response = await axios.get(`${API_URL}/api/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

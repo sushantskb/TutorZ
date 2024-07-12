@@ -19,11 +19,14 @@ const ContactUs = () => {
   };
 
   const [loading, setLoading] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const resp = await axios.post("/api/contact", contactData);
+      const resp = await axios.post(`${API_URL}/api/contact`, contactData);
       const data = resp.data;
       toast.success("Successfull", {
         style: { background: "rgb(57, 57, 57)", color: "white" },

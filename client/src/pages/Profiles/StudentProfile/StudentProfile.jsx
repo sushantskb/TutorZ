@@ -22,6 +22,8 @@ const StudentProfile = () => {
     class: user.class,
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -69,15 +71,11 @@ const StudentProfile = () => {
         profileImage: profileImageUrl,
       };
 
-      const response = await axios.put(
-        `/api/users/profile/me`,
-        updatedUser,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.put(`${API_URL}/api/users/profile/me`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log(response);
       toast.success("Updated successfully", {
@@ -97,7 +95,7 @@ const StudentProfile = () => {
     try {
       const tutorPromises = user.tutors.map(async (tutorId) => {
         const response = await axios.get(
-          `/api/users/assigned-users/${tutorId}`,
+          `${API_URL}/api/users/assigned-users/${tutorId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -115,14 +113,11 @@ const StudentProfile = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        `/api/bookings/${user._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/bookings/${user._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setBookings(response.data.bookings); // Update state with bookings array
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -132,14 +127,11 @@ const StudentProfile = () => {
 
   const handleRemoveTutor = async (tutorId) => {
     try {
-      await axios.delete(
-        `/api/users/remove-user/${tutorId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/api/users/remove-user/${tutorId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("Tutor removed successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
@@ -156,7 +148,7 @@ const StudentProfile = () => {
   const handleCancelBooking = async (bookingId) => {
     try {
       await axios.put(
-        `/api/bookings/cancel-booking/${bookingId}`,
+        `${API_URL}/api/bookings/cancel-booking/${bookingId}`,
         {},
         {
           headers: {

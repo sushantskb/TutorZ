@@ -34,6 +34,8 @@ const TutorProfile = () => {
     price: 0,
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // console.log("User: ", user);
 
   const handleTabChange = (tab) => {
@@ -99,15 +101,11 @@ const TutorProfile = () => {
         profileImage: profileImageUrl,
       };
 
-      const response = await axios.put(
-        "/api/users/profile/me",
-        updatedUser,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.put(`${API_URL}/api/users/profile/me`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log(response);
       // Handle success
@@ -127,14 +125,11 @@ const TutorProfile = () => {
 
   const fetchPendingRequests = async () => {
     try {
-      const res = await axios.get(
-        `/api/users/pending-requests`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${API_URL}/api/users/pending-requests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPendingRequests(res.data);
     } catch (error) {
       console.error("Error fetching students: ", error);
@@ -150,7 +145,7 @@ const TutorProfile = () => {
     try {
       const studentPromises = user.students.map(async (studentId) => {
         const response = await axios.get(
-          `/api/users/assigned-users/${studentId}`,
+          `${API_URL}/api/users/assigned-users/${studentId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -173,14 +168,11 @@ const TutorProfile = () => {
 
   const fetchSlots = async () => {
     try {
-      const response = await axios.get(
-        `/api/slots/${tutorId.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/slots/${tutorId.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const formattedSlots = response.data.slots.map((slot) => ({
         ...slot,
@@ -203,7 +195,7 @@ const TutorProfile = () => {
   const handleApproveRequest = async (studentId) => {
     try {
       const response = await axios.post(
-        `/api/users/approve-tutor/${studentId}`,
+        `${API_URL}/api/users/approve-tutor/${studentId}`,
         {},
         {
           headers: {
@@ -226,14 +218,11 @@ const TutorProfile = () => {
 
   const handleRemoveStudent = async (studentId) => {
     try {
-      await axios.delete(
-        `/api/users/remove-user/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/api/users/remove-user/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("Student removed successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
@@ -253,7 +242,7 @@ const TutorProfile = () => {
 
     try {
       const response = await axios.post(
-        "/api/slots/create-slots",
+        `${API_URL}/api/slots/create-slots`,
         slotFormData,
         {
           headers: {
@@ -273,14 +262,11 @@ const TutorProfile = () => {
 
   const handleDeleteSlot = async (slotId) => {
     try {
-      await axios.delete(
-        `/api/slots/delete-slot/${slotId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/api/slots/delete-slot/${slotId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Slot Deleted", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });

@@ -3,7 +3,6 @@ import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -12,12 +11,13 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (token) {
       // Fetch user data from API to verify token
       axios
-        .get("/api/auth/verify", {
+        .get(`${API_URL}/api/auth/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -31,17 +31,14 @@ const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const login = async (formData) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(
-        "/api/auth/login",
-        formData
-      );
+      const response = await axios.post(`${API_URL}/api/auth/login`, formData);
       setToken(response.data.token);
       setUser(response.data.user);
       localStorage.setItem("token", response.data.token);
@@ -57,10 +54,7 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(
-        "/api/auth/signup",
-        formData
-      );
+      const response = await axios.post(`${API_URL}/api/auth/signup`, formData);
       setToken(response.data.token);
       setUser(response.data.user);
       localStorage.setItem("token", response.data.token);
@@ -77,7 +71,9 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     navigate("/login");
-    toast.success("Logged Out", {style: {background: "rgb(46, 47, 42)", color: "white"}});
+    toast.success("Logged Out", {
+      style: { background: "rgb(46, 47, 42)", color: "white" },
+    });
   };
 
   return (
