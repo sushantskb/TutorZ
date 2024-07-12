@@ -12,12 +12,14 @@ import ContactUs from "../pages/Contact/ContactUs";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import Success from "../pages/SuccessPage/Success";
 import Error from "../pages/ErrorPage/Error";
+import About from "../pages/About/About";
 
 const Routers = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/courses" element={<Courses />} />
       <Route
         path="/tutors"
