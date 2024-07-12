@@ -24,7 +24,7 @@ app.use("/webhook", webhookRoutes); // this needs to be here...
 app.use(express.json());
 app.use(
   cors({
-    uri: "http://localhost:5173",
+    uri: ["http://localhost:5173", "https://tutorz.netlify.app/"]
   })
 );
 
