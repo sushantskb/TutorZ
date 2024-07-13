@@ -8,33 +8,26 @@ exports.createBooking = async (req, res) => {
   try {
     const slotId = req.params.id;
     const studentId = req.user._id;
+    const { customerDetails } = req.body;
 
     const slot = await Slot.findById(slotId).populate("teacherId");
     if (!slot) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Slot Not Found" });
+      return res.status(404).json({ success: false, message: "Slot Not Found" });
     }
 
     const tutor = slot.teacherId;
     if (!tutor) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Tutor Not Found" });
+      return res.status(404).json({ success: false, message: "Tutor Not Found" });
     }
 
     const bookingCount = await Booking.countDocuments({ slotId });
     if (bookingCount >= slot.capacity) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Slot is fully booked" });
+      return res.status(400).json({ success: false, message: "Slot is fully booked" });
     }
 
     const existingBooking = await Booking.findOne({ studentId, slotId });
     if (existingBooking) {
-      return res
-        .status(409)
-        .json({ success: false, message: "You have already booked this slot" });
+      return res.status(409).json({ success: false, message: "You have already booked this slot" });
     }
 
     // Create a Stripe Checkout Session
@@ -61,8 +54,17 @@ exports.createBooking = async (req, res) => {
         studentId: studentId.toString(),
         tutorId: tutor._id.toString(),
       },
+      customer: {
+        name: customerDetails.name,
+        address: {
+          line1: customerDetails.address.line1,
+          city: customerDetails.address.city,
+          state: customerDetails.address.state,
+          postal_code: customerDetails.address.postal_code,
+          country: customerDetails.address.country,
+        },
+      },
     });
-
 
     return res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {

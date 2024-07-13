@@ -134,23 +134,35 @@ const Tutor = () => {
 
   const handleBookDemo = async (slotId) => {
     setIsLoading(true);
+  
+    const customerDetails = {
+      name: "Customer Name",
+      address: {
+        line1: "Address Line 1",
+        city: "City",
+        state: "State",
+        postal_code: "Postal Code",
+        country: "IN",
+      },
+    };
+  
     try {
       const response = await axios.post(
         `${API_URL}/api/bookings/create-checkout-session/${slotId}`,
-        {},
+        { customerDetails },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  
       const { sessionId } = response.data;
-
+  
       // Redirect to Stripe Checkout
       const stripe = await stripePromise;
       await stripe.redirectToCheckout({ sessionId });
-
+  
       setIsLoading(false);
     } catch (error) {
       console.error("Error creating checkout session:", error);
