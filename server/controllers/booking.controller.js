@@ -30,6 +30,18 @@ exports.createBooking = async (req, res) => {
       return res.status(409).json({ success: false, message: "You have already booked this slot" });
     }
 
+    // Create a Customer in Stripe
+    const customer = await stripe.customers.create({
+      name: customerDetails.name,
+      address: {
+        line1: customerDetails.address.line1,
+        city: customerDetails.address.city,
+        state: customerDetails.address.state,
+        postal_code: customerDetails.address.postal_code,
+        country: customerDetails.address.country,
+      },
+    });
+
     // Create a Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -54,16 +66,7 @@ exports.createBooking = async (req, res) => {
         studentId: studentId.toString(),
         tutorId: tutor._id.toString(),
       },
-      customer_details: {
-        name: customerDetails.name,
-        address: {
-          line1: customerDetails.address.line1,
-          city: customerDetails.address.city,
-          state: customerDetails.address.state,
-          postal_code: customerDetails.address.postal_code,
-          country: customerDetails.address.country,
-        },
-      },
+      customer: customer.id,
     });
 
     return res.status(200).json({ success: true, sessionId: session.id });
