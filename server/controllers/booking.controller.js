@@ -47,14 +47,14 @@ exports.createBooking = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:5173/success", // Adjust according to your client-side success URL
-      cancel_url: "http://localhost:5173/cancel", // Adjust according to your client-side cancel URL
+      success_url: "https://tutorz.netlify.app/success", // Adjust according to your client-side success URL
+      cancel_url: "https://tutorz.netlify.app/cancel", // Adjust according to your client-side cancel URL
       client_reference_id: slotId,
       metadata: {
         studentId: studentId.toString(),
         tutorId: tutor._id.toString(),
       },
-      customer: {
+      customer_details: {
         name: customerDetails.name,
         address: {
           line1: customerDetails.address.line1,
@@ -68,7 +68,7 @@ exports.createBooking = async (req, res) => {
 
     return res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
-    console.error(error);
+    console.error("Stripe Session Creation Error: ", error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
