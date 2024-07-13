@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Booking = require("../models/booking.model");
 const Slot = require("../models/slot.model");
+const User = require("../models/user.model");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Create a Booking
@@ -139,36 +140,38 @@ exports.getBookingsByStudent = async (req, res) => {
     return res.status(500).json({ success: false, error: error.message });
   }
 };
-// exports.getBookingsByStudent = async (req, res) => {
-//   try {
-//     const studentId = req.params.id;
-//     const bookings = await Booking.find({ studentId, status: true });
 
-//     if (bookings.length === 0) {
-//       return res.status(404).json({ success: false, message: "No bookings found for this student" });
-//     }
 
-//     // Extract teacherIds from bookings
-//     const teacherIds = bookings.map(booking => booking.teacherId);
+exports.getBookingsByTutor = async (req, res) => {
+  try {
+    const teacherId = req.user._id;
+    const bookings = await Booking.find({ teacherId, status: true });
 
-//     // Fetch teacher data for all unique teacherIds
-//     const teachers = await User.find({ _id: { $in: teacherIds } });
+    if (bookings.length === 0) {
+      return res.status(404).json({ success: false, message: "No bookings found for this tutor" });
+    }
 
-//     // Map teacher data to each booking
-//     const bookingsWithData = bookings.map(booking => {
-//       const teacherData = teachers.find(teacher => teacher._id.equals(booking.teacherId));
-//       return {
-//         booking,
-//         teacherData: teacherData ? teacherData : null // Handle case where teacherData not found
-//       };
-//     });
+    // Extract teacherIds from bookings
+    const studentsId = bookings.map(booking => booking.studentId);
 
-//     return res.status(200).json({ success: true, bookings: bookingsWithData });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ success: false, error: error.message });
-//   }
-// };
+    // Fetch teacher data for all unique teacherIds
+    const students = await User.find({ _id: { $in: studentsId } });
+
+    // Map teacher data to each booking
+    const bookingsWithData = bookings.map(booking => {
+      const studentData = students.find(student => student._id.equals(booking.studentId));
+      return {
+        booking,
+        studentData: studentData ? studentData : null // Handle case where teacherData not found
+      };
+    });
+
+    return res.status(200).json({ success: true, bookings: bookingsWithData });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
 
 // Cancel a booking
 exports.cancelBooking = async (req, res) => {

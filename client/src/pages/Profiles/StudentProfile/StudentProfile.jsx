@@ -123,7 +123,6 @@ const StudentProfile = () => {
       console.error("Error fetching bookings:", error);
     }
   };
-  console.log(bookings);
 
   const handleRemoveTutor = async (tutorId) => {
     try {

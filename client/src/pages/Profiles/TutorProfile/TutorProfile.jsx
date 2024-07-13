@@ -14,7 +14,7 @@ const TutorProfile = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [slots, setSlots] = useState([]);
-
+  const [bookings, setBookings] = useState([]);
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
@@ -101,11 +101,15 @@ const TutorProfile = () => {
         profileImage: profileImageUrl,
       };
 
-      const response = await axios.put(`${API_URL}/api/users/profile/me`, updatedUser, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        `${API_URL}/api/users/profile/me`,
+        updatedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       console.log(response);
       // Handle success
@@ -188,8 +192,22 @@ const TutorProfile = () => {
     }
   };
 
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/bookings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBookings(response.data.bookings); // Update state with bookings array
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    }
+  };
+
   useEffect(() => {
     fetchSlots();
+    fetchBookings();
   }, []);
 
   const handleApproveRequest = async (studentId) => {
@@ -278,6 +296,7 @@ const TutorProfile = () => {
       });
     }
   };
+  console.log(bookings);
 
   return (
     <div className="tutor-profile-page">
@@ -315,6 +334,12 @@ const TutorProfile = () => {
             onClick={() => handleTabChange("slots")}
           >
             Slots
+          </button>
+          <button
+            className={activeTab === "bookings" ? "active" : ""}
+            onClick={() => handleTabChange("bookings")}
+          >
+            My Bookings
           </button>
         </div>
       </div>
@@ -613,6 +638,30 @@ const TutorProfile = () => {
                     </table>
                   )}
                 </div>
+              )}
+            </div>
+          </div>
+        )}
+        {activeTab === "bookings" && (
+          <div className="bookings-section">
+            <h3>My Bookings</h3>
+            <div className="card-container">
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <div className="card" key={booking.studentData._id}>
+                    <div className="card-header">
+                      <h3 className="card-title">
+                        <img src={booking.studentData.profileImage} />
+                      </h3>
+                    </div>
+                    <div className="card-content">
+                      <p className="card-name">{booking.studentData.name}</p>
+                    </div>
+                    <div className="card-footer">{booking.studentData.class}</div>
+                  </div>
+                ))
+              ) : (
+                <p>no bookings</p>
               )}
             </div>
           </div>
