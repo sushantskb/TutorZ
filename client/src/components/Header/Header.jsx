@@ -84,7 +84,12 @@ const Header = () => {
             </Link>
           ) : (
             <Link to="/login" onClick={closeToggle}>
-              <button className="btn btn-primary">Login</button>
+              <button
+                className="btn btn-primary login"
+                style={{ margin: "auto" }}
+              >
+                Login
+              </button>
             </Link>
           )}
         </div>

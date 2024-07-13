@@ -227,10 +227,14 @@ const TutorProfile = () => {
       setPendingRequests((prevRequests) =>
         prevRequests.filter((request) => request._id !== studentId)
       );
-      toast.success("Tutor request approved successfully");
+      toast.success("Tutor request approved successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     } catch (error) {
       console.error("Error approving tutor request:", error);
-      toast.error("Error approving tutor request");
+      toast.error("Error approving tutor request", {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      });
     }
   };
 
@@ -269,10 +273,14 @@ const TutorProfile = () => {
         }
       );
       console.log(response.data);
-      toast.success("Slot created successfully");
+      toast.success("Slot created successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      });
     } catch (err) {
       console.error("Error creating slot:", err);
-      toast.error("Error creating slot:", err);
+      toast.error("Error creating slot:", err, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      });
     } finally {
       setIsLoading(false);
     }
@@ -657,7 +665,9 @@ const TutorProfile = () => {
                     <div className="card-content">
                       <p className="card-name">{booking.studentData.name}</p>
                     </div>
-                    <div className="card-footer">{booking.studentData.class}</div>
+                    <div className="card-footer">
+                      {booking.studentData.class}
+                    </div>
                   </div>
                 ))
               ) : (

@@ -147,4 +147,9 @@ nav button {
   .nav_menu {
     right: 3%;
   }
+  .login {
+    font-size: 15px;
+    width: 100px !important;
+    padding: 10px !important;
+  }
 }
