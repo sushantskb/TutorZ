@@ -40,7 +40,6 @@ const ContactUs = () => {
       });
       return data;
     } catch (error) {
-      console.log(error);
       setLoading(false);
       toast.error(error, {
         style: { background: "rgb(57, 57, 57)", color: "white" },

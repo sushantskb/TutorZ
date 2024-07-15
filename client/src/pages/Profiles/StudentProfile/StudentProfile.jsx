@@ -71,18 +71,17 @@ const StudentProfile = () => {
         profileImage: profileImageUrl,
       };
 
+      // eslint-disable-next-line no-unused-vars
       const response = await axios.put(`${API_URL}/api/users/profile/me`, updatedUser, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log(response);
       toast.success("Updated successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     } catch (error) {
-      console.error("Error updating profile:", error);
       toast.error("Error updating profile", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -107,7 +106,9 @@ const StudentProfile = () => {
       const tutors = await Promise.all(tutorPromises);
       setAssignedTutors(tutors);
     } catch (error) {
-      console.error("Error fetching tutors:", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -120,7 +121,9 @@ const StudentProfile = () => {
       });
       setBookings(response.data.bookings); // Update state with bookings array
     } catch (error) {
-      console.error("Error fetching bookings:", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -137,7 +140,6 @@ const StudentProfile = () => {
       });
       fetchTutors();
     } catch (error) {
-      console.error("Error removing tutor:", error);
       toast.error("Error removing tutor", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -162,7 +164,6 @@ const StudentProfile = () => {
 
       fetchBookings();
     } catch (error) {
-      console.error("Error cancelling booking:", error);
       toast.error("Error cancelling booking", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });

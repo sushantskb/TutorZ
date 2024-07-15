@@ -5,6 +5,7 @@ import "./tutors.css";
 import { AuthContext } from "../../components/Context/AuthContext";
 import axios from "axios";
 import Loader from "../../components/Loader/Loader";
+import { toast } from "react-toastify";
 const Tutors = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true)
@@ -21,7 +22,9 @@ const API_URL = import.meta.env.VITE_API_URL;
       setTutors(response.data);
       setLoading(false)
     } catch (error) {
-      console.log(error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
       setLoading(false)
     }
   };

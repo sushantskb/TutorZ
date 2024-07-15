@@ -36,7 +36,6 @@ const TutorProfile = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // console.log("User: ", user);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -101,6 +100,7 @@ const TutorProfile = () => {
         profileImage: profileImageUrl,
       };
 
+      // eslint-disable-next-line no-unused-vars
       const response = await axios.put(
         `${API_URL}/api/users/profile/me`,
         updatedUser,
@@ -111,14 +111,12 @@ const TutorProfile = () => {
         }
       );
 
-      console.log(response);
       // Handle success
       toast.success("Updated successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
       // Optionally, you can update the user context with the new data
     } catch (error) {
-      console.error("Error updating profile:", error);
       toast.error("Error updating profile", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -136,7 +134,9 @@ const TutorProfile = () => {
       });
       setPendingRequests(res.data);
     } catch (error) {
-      console.error("Error fetching students: ", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -161,7 +161,9 @@ const TutorProfile = () => {
       const students = await Promise.all(studentPromises);
       setAssignedStudents(students);
     } catch (error) {
-      console.error("Error fetching students: ", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -188,7 +190,9 @@ const TutorProfile = () => {
       }));
       setSlots(formattedSlots);
     } catch (error) {
-      console.error("Error fetching slots: ", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -201,7 +205,9 @@ const TutorProfile = () => {
       });
       setBookings(response.data.bookings); // Update state with bookings array
     } catch (error) {
-      console.error("Error fetching bookings:", error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -212,6 +218,7 @@ const TutorProfile = () => {
 
   const handleApproveRequest = async (studentId) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const response = await axios.post(
         `${API_URL}/api/users/approve-tutor/${studentId}`,
         {},
@@ -222,7 +229,6 @@ const TutorProfile = () => {
         }
       );
 
-      console.log(response);
       // Update pending requests after approval
       setPendingRequests((prevRequests) =>
         prevRequests.filter((request) => request._id !== studentId)
@@ -231,7 +237,6 @@ const TutorProfile = () => {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     } catch (error) {
-      console.error("Error approving tutor request:", error);
       toast.error("Error approving tutor request", {
         style: { background: "rgb(57, 57, 57)", color: "white" }
       });
@@ -251,7 +256,6 @@ const TutorProfile = () => {
       });
       fetchStudents();
     } catch (error) {
-      console.error("Error removing tutor:", error);
       toast.error("Error removing tutor", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -263,6 +267,7 @@ const TutorProfile = () => {
     setIsLoading(true);
 
     try {
+      // eslint-disable-next-line no-unused-vars
       const response = await axios.post(
         `${API_URL}/api/slots/create-slots`,
         slotFormData,
@@ -272,12 +277,10 @@ const TutorProfile = () => {
           },
         }
       );
-      console.log(response.data);
       toast.success("Slot created successfully", {
         style: { background: "rgb(57, 57, 57)", color: "white" }
       });
     } catch (err) {
-      console.error("Error creating slot:", err);
       toast.error("Error creating slot:", err, {
         style: { background: "rgb(57, 57, 57)", color: "white" }
       });
@@ -298,13 +301,11 @@ const TutorProfile = () => {
       });
       fetchSlots();
     } catch (error) {
-      console.error("Error in deleting slot:", error.message);
       toast.error("Error in deleting slot", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
     }
   };
-  console.log(bookings);
 
   return (
     <div className="tutor-profile-page">

@@ -7,7 +7,6 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   const toggleMenu = () => {
     setMenu(!menu);

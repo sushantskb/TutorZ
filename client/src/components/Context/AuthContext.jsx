@@ -42,9 +42,14 @@ const AuthProvider = ({ children }) => {
       setToken(response.data.token);
       setUser(response.data.user);
       localStorage.setItem("token", response.data.token);
+      toast.success("Login Successfull", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
       navigate("/");
     } catch (err) {
-      setError(err.response.data.message || "Login failed");
+      toast.error(err.response.data.message || "Login failed", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     } finally {
       setLoading(false);
     }
@@ -58,9 +63,14 @@ const AuthProvider = ({ children }) => {
       setToken(response.data.token);
       setUser(response.data.user);
       localStorage.setItem("token", response.data.token);
+      toast.success("Sign up successfully", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
       navigate("/");
     } catch (err) {
-      setError(err.response.data.message || "Signup failed");
+      toast.error(err.response.data.message || "Signup failed", {
+        style: { background: "rgb(57, 57, 57)", color: "white" },
+      });
     } finally {
       setLoading(false);
     }

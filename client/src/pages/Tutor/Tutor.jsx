@@ -67,8 +67,9 @@ const Tutor = () => {
           setRequestApproved(true);
         }
       } catch (error) {
-        console.error("Error checking if tutor added:", error);
-        setError(error);
+        toast.error(error, {
+          style: { background: "rgb(57, 57, 57)", color: "white" }
+        })
       }
     };
 
@@ -85,8 +86,9 @@ const Tutor = () => {
 
         setReviews(response.data.reviews);
       } catch (error) {
-        console.error("Error fetching reviews:", error);
-        setError(error);
+        toast.error(error, {
+          style: { background: "rgb(57, 57, 57)", color: "white" }
+        })
       }
     };
 
@@ -100,8 +102,9 @@ const Tutor = () => {
 
         setSlots(response.data.slots);
       } catch (error) {
-        console.error("Error fetching slots:", error);
-        setError(error);
+        toast.error(error, {
+          style: { background: "rgb(57, 57, 57)", color: "white" }
+        })
       }
     };
 
@@ -127,8 +130,9 @@ const Tutor = () => {
         setRequestSent(true);
       }
     } catch (error) {
-      console.error("Error adding tutor:", error);
-      setError(error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -165,7 +169,6 @@ const Tutor = () => {
 
       setIsLoading(false);
     } catch (error) {
-      console.error("Error creating checkout session:", error);
       toast.error("Failed to create checkout session.", {
         style: { background: "rgb(57, 57, 57)", color: "white" },
       });
@@ -206,8 +209,9 @@ const Tutor = () => {
         });
       }
     } catch (error) {
-      console.error("Error submitting feedback:", error);
-      setError(error);
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -228,7 +232,6 @@ const Tutor = () => {
   if (loading) return <Loader />;
 
   if (error) {
-    console.log(error);
     return <div>Error loading tutor data</div>;
   }
 

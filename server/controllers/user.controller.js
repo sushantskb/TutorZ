@@ -19,7 +19,6 @@ exports.getUsers = async (req, res) => {
 
     return res.status(200).json(users);
   } catch (error) {
-    console.log("Error fetching the users: ", error);
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };
@@ -35,7 +34,6 @@ exports.getTutor = async (req, res) => {
 
     return res.status(200).json(tutor);
   } catch (error) {
-    console.log("Error fetching the tutor: ", error);
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };
@@ -48,7 +46,6 @@ exports.assignedUsers = async (req, res) => {
     }
     res.status(200).json(assignedUser);
   } catch (error) {
-    console.log(error.message);
     res.status(500).send("Server Error");
   }
 };
@@ -85,7 +82,6 @@ exports.updateProfile = async (req, res) => {
     const { password: _, ...updatedUser } = user._doc;
     return res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -109,7 +105,6 @@ exports.deleteProfile = async (req, res) => {
 // add tutor
 exports.addTutor = async (req, res) => {
   try {
-    console.log(req.user);
     const studentId = req.user._id; //logged in user
     const tutorId = req.params.id;
 
@@ -135,7 +130,6 @@ exports.addTutor = async (req, res) => {
 
     return res.status(200).json({ message: "Request sent successfully" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -169,7 +163,6 @@ exports.fetchPendingRequests = async (req, res) => {
 
     return res.status(200).json(pendingRequests);
   } catch (error) {
-    console.log("Error fetching pending requests: ", error);
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };
@@ -216,7 +209,6 @@ exports.approveTutorRequest = async (req, res) => {
       tutors: student.tutors,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -248,7 +240,6 @@ exports.checkTutor = async (req, res) => {
 
     return res.status(200).json({ added: isTutorAdded });
   } catch (error) {
-    console.log("Error checking the tutor: ", error);
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };
@@ -303,7 +294,6 @@ exports.removeTutor = async (req, res) => {
 
     return res.status(200).json({ message: "Successfully removed", targetId });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong", error });
   }
 };

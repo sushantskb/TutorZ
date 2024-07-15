@@ -6,9 +6,6 @@ exports.createReview = async (req, res) => {
     const studentId = req.user._id; // here it will be user._id..because in mongoose we identify the id through _id
     const teacherId = req.params.id;
 
-    // log to check the studentId
-    // console.log("studentId: ", studentId);
-
     const { title, content, rating } = req.body;
     const review = new Review({
       title,
@@ -20,7 +17,6 @@ exports.createReview = async (req, res) => {
     await review.save();
     return res.status(201).json({ success: true, review });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ success: false, error: error.message });
   }
 };
@@ -35,7 +31,6 @@ exports.getAllReviews = async (req, res) => {
     );
     return res.status(200).json({ success: true, reviews });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };

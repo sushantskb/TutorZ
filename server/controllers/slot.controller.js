@@ -25,7 +25,6 @@ exports.createSlot = async (req, res) => {
       slot,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -38,7 +37,6 @@ exports.getSlot = async (req, res) => {
 
     return res.status(200).json({ success: true, slots });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -52,7 +50,6 @@ exports.deleteSlot = async (req, res) => {
     await Slot.findOneAndDelete({ _id: slotId, teacherId });
     return res.status(200).json({ success: true, message: "Deletion Success" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };

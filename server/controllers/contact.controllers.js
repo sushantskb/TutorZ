@@ -10,7 +10,6 @@ exports.sendMessage = async (req, res) => {
     });
     res.status(200).json({ message });
   } catch (error) {
-    console.log(error);
     res.status(501).json({ message: "Internal Server Error" });
   }
 };

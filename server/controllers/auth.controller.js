@@ -84,7 +84,6 @@ exports.login = async (req, res) => {
       ...userWithoutPassword,
     });
   } catch (error) {
-    console.error("Error:", error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };

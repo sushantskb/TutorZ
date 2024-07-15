@@ -72,7 +72,6 @@ exports.createBooking = async (req, res) => {
 
     return res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
-    console.error("Stripe Session Creation Error: ", error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -136,7 +135,6 @@ exports.getBookingsByStudent = async (req, res) => {
     }
     return res.status(200).json({ success: true, bookings });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -168,7 +166,6 @@ exports.getBookingsByTutor = async (req, res) => {
 
     return res.status(200).json({ success: true, bookings: bookingsWithData });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -192,7 +189,6 @@ exports.cancelBooking = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Successfully Cancelled" });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ success: false, error: error.message });
   }
 };

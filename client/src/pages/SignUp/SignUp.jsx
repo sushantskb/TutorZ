@@ -6,7 +6,7 @@ import { AuthContext } from "../../components/Context/AuthContext";
 import { toast } from "react-toastify";
 
 const SignUp = () => {
-  const { signup, loading, error } = useContext(AuthContext);
+  const { signup, loading } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,7 +49,6 @@ const SignUp = () => {
       );
 
       const data = await response.json();
-      // console.log("Cloudinary response data:", data);
 
       if (!response.ok) {
         throw new Error(data.error.message || "Image upload failed");
@@ -57,8 +56,9 @@ const SignUp = () => {
 
       return data.secure_url;
     } catch (error) {
-      console.error("Error uploading image to Cloudinary:", error);
-      throw error;
+      toast.error(error, {
+        style: { background: "rgb(57, 57, 57)", color: "white" }
+      })
     }
   };
 
@@ -86,15 +86,6 @@ const SignUp = () => {
       };
 
       await signup(filteredData);
-      if (error) {
-        toast.error(error, {
-          style: { background: "rgba(247, 88, 66, 0.4)", color: "white" },
-        });
-      } else {
-        toast.success("Signup Success!", {
-          style: { background: "rgb(57, 57, 57)", color: "white" },
-        });
-      }
     } catch (error) {
       toast.error(error.message, {
         style: { background: "rgba(247, 88, 66, 0.4)", color: "white" },
